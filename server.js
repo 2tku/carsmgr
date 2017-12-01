@@ -1,60 +1,102 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const MongoClient = require('mongodb').MongoClient
-const app = express()
+// set up ========================
+const express = require('express');
+const app = express();                                          // create our app w/ express
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(express.static('public'))
-app.use(bodyParser.json())
-app.set('view engine', 'ejs')
+const morgan = require('morgan');                               // log requests to the console (express4)
+// const methodOverride = require('method-override');              // simulate DELETE and PUT (express4)
+const bodyParser = require('body-parser');                      // pull information from HTML POST (express4)
+const mongoose = require('mongoose');                           // mongoose for mongodb
 
-// start-wars-quotes
-MongoClient.connect('mongodb://thuattq:thuattq@ds115546.mlab.com:15546/star-wars-quotes', (err, database) => {
-  if(err) return console.log(err);
-  db = database
-  app.listen(3000, function(){
-    console.log('listening on 3000')
-  })
-})
+// configuration =================
+var options = {
+  useMongoClient: true,
+  autoIndex: false, // Don't build indexes
+  reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+  reconnectInterval: 500, // Reconnect every 500ms
+  poolSize: 1, // Maintain up to 10 socket connections
+  // If not connected, return errors immediately rather than waiting for reconnect
+  bufferMaxEntries: 0
+};
+mongoose.connect('mongodb://thuattq:thuattq@ds125556.mlab.com:25556/carsmgr', options)
+.then(
+  () => {},
+  err => {console.log('err when connect db; error: ' + err)}
+);
+                                                                // connect to mongoDB database on modulus.io
 
-app.get('/',(req, res)=>{
-  // res.sendFile(__dirname + '/index.html');
-  db.collection('quotes').find().toArray(function(err, result){
-    if(err) return console.log(err)
-      
-    res.render('index.ejs', {quotes: result})
-  })
-})
+app.use(express.static('public'));                              // set the static files location /public/img will be /img for users
+app.use(bodyParser.urlencoded({extended: true}));               // parse application/x-www-form-urlencoded
+app.use(bodyParser.json());                                     // parse application/json
+app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
+app.use(morgan('dev'));                                         // log every request to the console
+// app.use(methodOverride());
 
-app.post('/quotes', (req, res) =>{
-  db.collection('quotes').save(req.body, (err, result) => {
-    if(err) return console.log(err)
-      
-    console.log('saved to database')
-    res.redirect('/')
-  })
-})
+// listen (start app with node server.js) ======================================
+app.listen(3000, function(){
+  console.log('listening on 3000')
+});
 
-app.put('/quotes', (req, res) => {
-  db.collection('quotes').findOneAndUpdate({name: 'Yoda'}, {
-    $set: {
-      name: req.body.name,
-      quote: req.body.quote
-    }
-  }, {
-    sort: {_id: -1},
-    upsert: true
-  }, (err, result) => {
-    if (err) return res.send(err)
-    res.send(result)
-  })
-})
+// define model =================
+var Todo = mongoose.model('Todo', {
+  text : String
+});
 
-app.delete('/quotes', (req, res) => {
-  db.collection('quotes').findOneAndDelete({name: req.body.name},
-  (err, result) => {
-    if (err) return res.send(500, err)
-      
-    res.send({message: 'A darth vadar quote got deleted'})
-  })
-})
+// routes ======================================================================
+
+    // api ---------------------------------------------------------------------
+    // get all todos
+    app.get('/api/todos', function(req, res) {
+
+        // use mongoose to get all todos in the database
+        Todo.find(function(err, todos) {
+
+            // if there is an error retrieving, send the error. nothing after res.send(err) will execute
+            if (err)
+                res.send(err)
+
+            res.json(todos); // return all todos in JSON format
+        });
+    });
+
+    // create todo and send back all todos after creation
+    app.post('/api/todos', function(req, res) {
+
+        // create a todo, information comes from AJAX request from Angular
+        Todo.create({
+            text : req.body.text,
+            done : false
+        }, function(err, todo) {
+            if (err)
+                res.send(err);
+
+            // get and return all the todos after you create another
+            Todo.find(function(err, todos) {
+                if (err)
+                    res.send(err)
+                res.json(todos);
+            });
+        });
+
+    });
+
+    // delete a todo
+    app.delete('/api/todos/:todo_id', function(req, res) {
+        Todo.remove({
+            _id : req.params.todo_id
+        }, function(err, todo) {
+            if (err)
+                res.send(err);
+
+            // get and return all the todos after you create another
+            Todo.find(function(err, todos) {
+                if (err)
+                    res.send(err)
+                res.json(todos);
+            });
+        });
+    });
+
+    // application -------------------------------------------------------------
+    app.get('*', function(req, res) {
+      res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+    });
