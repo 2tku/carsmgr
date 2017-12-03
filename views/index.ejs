@@ -1,62 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="AppModule" >
+    <title><%= title %></title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<head>
-  <meta charset="UTF-8">
-  <title>MY APP</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
 
-  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase-messaging.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-resource.min.js"></script>
+        
+        <script type="text/javascript" src="/javascripts/main.js"></script>
+    </head>
 
-  <script>
-    // Initialize Firebase
-    // TODO: Replace with your project's customized code snippet
-    var config = {
-      apiKey: "<API_KEY>",
-      authDomain: "<PROJECT_ID>.firebaseapp.com",
-      databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
-      storageBucket: "<BUCKET>.appspot.com",
-      messagingSenderId: "<SENDER_ID>",
-    };
-    
-    firebase.initializeApp(config);
-  </script>
+    <body ng-controller="AppCtrl as appCtrl">
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/"><%= title %></a>
+                    </div>
 
-  <script src="main.js"></script>
-</head>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+                        <li><a href="#!view"><i class="fa fa-comment"></i> View</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
 
-<body>
-  May Node and Express be with you.
+        <div class="container">
+            <!-- <div class="jumbotron">
+                <h1>Demo html</h1>
+                <p>Demo bootstrap, angularjs, nodejs.</p>
+            </div> -->
 
-  <ul class="quotes">
-    <% for(var i=0; i<quotes.length; i++) {%>
-      <li class="quote">
-        <span><%= quotes[i].name %></span>
-        <span><%= quotes[i].quote %></span>
-      </li>
-      <% } %>
-  </ul>
+            <div id="main">
+                <div ng-view></div>
+            </div>
+        </div>
 
-  <form action="/quotes" method="POST">
-    <input type="text" placeholder="name" name="name">
-    <input type="text" placeholder="quote" name="quote">
-    <button type="submit">Submit</button>
-  </form>
+        <footer class="text-center">
+            <nav class="navbar navbar-default">
+                <p><%= title %></p>
+                <p>Author <a href="qthuat@gmail.com">thuattq</a></p>
+            </nav>
+        </footer>
 
-  <div>
-    <h2>Replace last quote written by Master Yoda with a quote written by Darth Vadar</h2>
-    <button id="update"> Darth Vadar invades! </button>
-  </div>
+        <!-- Template -->
+        <script type="text/ng-template" id="/pageLogin.html">
+          <div class="panel panel-default" ng-controller="LoginCtrl as loginCtrl">
+              <div class="panel-heading">Login form</div>
+              <div class="panel-body">
+                  <form id="frmLogin">
+                      <div class="form-group">
+                          <label for="email">User</label>
+                          <input id="iUser" type="text" class="form-control" ng-model="loginCtrl.userName"/>
+                      </div>
+                      <div class="form-group">
+                          <label for="pwd">Pass</label>
+                          <input id="iPass" type="text" class="form-control" ng-model="loginCtrl.pass"/>
+                      </div>
 
-  <div>
-    <h2>Delete Darth Vadar's first quote</h2>
-    <button id="delete"> Delete first Darth Vadar quote </button>
-  </div>
-</body>
-
+                      <button type="button" class="btn btn-default" ng-click="loginCtrl.login()" id="btnLogin">
+                          <span class="glyphicon glyphicon-log-in"></span> Login
+                      </button>
+                  </form>
+              </div>
+              <div class="panel-body">
+                  <div class="alert alert-danger" ng-show="loginCtrl.isError">
+                      <strong>Error!</strong> {{loginCtrl.errorMsg}}.
+                  </div>
+              </div>
+          </div>      
+        </script>
+        
+        <script type="text/ng-template" id="/tasksView.html">
+          <div class="panel panel-default" ng-controller="TasksViewCtrl as tasksViewCtrl">
+              <div class="panel-heading">View form</div>
+              <div class="panel-body">
+                  <form class="form-horizontal" id="frmView">
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="note">User</label>
+                          <div class="col-sm-10">
+                              <input id="iUserSearch" type="text" class="form-control"/>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="note">Complete Date</label>
+                          <div class="col-sm-10">
+                              <input id="iCDateSearch" type="text" class="form-control"/>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <div class="col-sm-offset-2 col-sm-10">
+                              <button type="button" class="btn btn-default" id="btnSearch">
+                                  <span class="glyphicon glyphicon-search"></span> Search
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+                  <br/>
+                  <div class="table-responsive">  
+                      <table class="table table-bordered">
+                          <thead>
+                              <tr>
+                                  <th>#</th>
+                                  <!-- -->
+                                  <th>Ngày nhập</th>
+                                  <th>Phương tiện</th>
+                                  <th>Đơn vị quản lý</th>
+                                  <th>Quy trình</th>
+                                  <th>Nội dung sửa chữa</th>
+                                  <th>Thời gian bắt đầu</th>
+                                  <th>Thời gian kết thúc</th>
+                                  <th>Thời gian thực tế</th>
+                                  <th>Thời gian chờ vật tư</th>
+                                  <th>Số Km</th>
+                                  <th>Ghi chú</th>
+                                  <!-- -->
+                                  <th><input type="checkbox"/></th>
+                              </tr>
+                          </thead>
+                          <tbody ng-repeat="task in tasks | filter: search">
+                              <tr>
+                                  <th>$index</th>
+                                  <!-- -->
+                                  <th><a href="#/{{task._id}}">{{task.create_date}}</a></th>
+                                  <th>{{task.vehicle}}</th>
+                                  <th>{{task.own_org}}</th>
+                                  <th>{{task.process_type}}</th>
+                                  <th>{{task.tast_content}}</th>
+                                  <th>{{task.begin_time}}</th>
+                                  <th>{{task.end_time}}</th>
+                                  <th>{{task.task_real_hour}}</th>
+                                  <th>{{task.wait_material_hour}}</th>
+                                  <th>{{task.km}}</th>
+                                  <th>{{task.note}}</th>
+                                  <!-- -->
+                                  <th><input type="checkbox"/></th>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                  <form class="form-horizontal" id="frmAction">
+                      <div class="form-group">
+                          <div class="col-sm-offset-9 col-sm-10">
+                              <button type="button" class="btn btn-default" id="btnAdd" >
+                                  <span class="glyphicon glyphicon-download-alt"></span> Add new
+                              </button>
+                              <button type="button" class="btn btn-default" id="btnEdit">
+                                  <span class="glyphicon glyphicon-trash"></span> Remove
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>      
+        </script>
+        
+        <script type="text/ng-template" id="/taskEdit.html">
+          <div class="panel panel-default" ng-controller="TaskEditCtrl as taskEditCtrl">
+              <div class="panel-heading">[Edit] | [Add new] form</div>
+              <div class="panel-body">
+                  <form class="form-horizontal" id="frmEdit" >
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Action</label>
+                          <div class="col-sm-10">
+                              <input id="iAction" type="text" class="form-control">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="staff">Staff</label>
+                          <div class="col-sm-10">
+                              <input id="iStaff" type="text" class="form-control">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="cDate">Date complete</label>
+                          <div class="col-sm-10">
+                              <input id="iCDate" type="text" class="form-control">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="note">Note</label>
+                          <div class="col-sm-10">
+                              <input id="iNote" type="text" class="form-control">
+                          </div>
+                      </div>
+                      <div class="form-group">        
+                          <div class="col-sm-offset-2 col-sm-10">
+                              <button type="button" class="btn btn-default" id="btnAdd" >
+                                  <span class="glyphicon glyphicon-ok"></span> OK
+                              </button>
+                              <button type="button" class="btn btn-default" id="btnEdit">
+                                  <span class="glyphicon glyphicon-remove"></span> Cancel
+                              </button>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>      
+        </script>
+    </body>
 </html>
