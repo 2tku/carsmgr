@@ -5,17 +5,35 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <style>
+            .full button span {
+              background-color: limegreen;
+              border-radius: 32px;
+              color: black;
+            }
+            .partially button span {
+              background-color: orange;
+              border-radius: 32px;
+              color: black;
+            }
+        </style>
+
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
 
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script> -->
 
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-resource.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-resource.min.js"></script>
+
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-animate.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-sanitize.js"></script>
         
         <script type="text/javascript" src="/javascripts/main.js"></script>
+        <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
     </head>
 
     <body ng-controller="AppCtrl as appCtrl">
@@ -151,7 +169,7 @@
                   <form class="form-horizontal" id="frmAction">
                       <div class="form-group">
                           <div class="col-sm-offset-9 col-sm-10">
-                              <button type="button" class="btn btn-default" id="btnAdd" >
+                              <button type="button" class="btn btn-default" id="btnAdd" ng-click="showAddNew()">
                                   <span class="glyphicon glyphicon-download-alt"></span> Add new
                               </button>
                               <button type="button" class="btn btn-default" id="btnEdit">
@@ -166,39 +184,81 @@
         
         <script type="text/ng-template" id="/taskEdit.html">
           <div class="panel panel-default" ng-controller="TaskEditCtrl as taskEditCtrl">
-              <div class="panel-heading">[Edit] | [Add new] form</div>
+              <div class="panel-heading">Edit task</div>
               <div class="panel-body">
-                  <form class="form-horizontal" id="frmEdit" >
-                      <div class="form-group">
-                          <label class="control-label col-sm-2" for="action">Action</label>
-                          <div class="col-sm-10">
-                              <input id="iAction" type="text" class="form-control">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label class="control-label col-sm-2" for="staff">Staff</label>
-                          <div class="col-sm-10">
-                              <input id="iStaff" type="text" class="form-control">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label class="control-label col-sm-2" for="cDate">Date complete</label>
-                          <div class="col-sm-10">
-                              <input id="iCDate" type="text" class="form-control">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          <label class="control-label col-sm-2" for="note">Note</label>
-                          <div class="col-sm-10">
-                              <input id="iNote" type="text" class="form-control">
-                          </div>
-                      </div>
+                  <form class="form-horizontal" id="frmEditTask" >
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Ngày nhập</label>
+                        <div class="col-sm-10">
+                            <input id="iCreateDate" type="text" class="form-control" ng-model="taskEditCtrl.task.create_date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Phương tiện</label>
+                        <div class="col-sm-10">
+                            <input id="iVehicle" type="text" class="form-control" ng-model="taskEditCtrl.task.vehicle">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
+                        <div class="col-sm-10">
+                            <input id="iOwnOrg" type="text" class="form-control" ng-model="taskEditCtrl.task.own_org">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Quy trình</label>
+                        <div class="col-sm-10">
+                            <input id="iProcessType" type="text" class="form-control" ng-model="taskEditCtrl.task.process_type">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Nội dung sửa chữa</label>
+                        <div class="col-sm-10">
+                            <input id="iTastContent" type="text" class="form-control" ng-model="taskEditCtrl.task.tast_content">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Thời gian bắt đầu</label>
+                        <div class="col-sm-10">
+                            <input id="iBeginTime" type="text" class="form-control" ng-model="taskEditCtrl.task.begin_time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Thời gian kết thúc</label>
+                        <div class="col-sm-10">
+                            <input id="iEndTime" type="text" class="form-control" ng-model="taskEditCtrl.task.end_time">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Thời gian thực tế</label>
+                        <div class="col-sm-10">
+                            <input id="iTaskRealHour" type="text" class="form-control" ng-model="taskEditCtrl.task.task_real_hour">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Thời gian chờ vật tư</label>
+                        <div class="col-sm-10">
+                            <input id="iWaitMaterialHour" type="text" class="form-control" ng-model="taskEditCtrl.task.wait_material_hour">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Số Km</label>
+                        <div class="col-sm-10">
+                            <input id="iKm" type="text" class="form-control" ng-model="taskEditCtrl.task.km">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="action">Ghi chú</label>
+                        <div class="col-sm-10">
+                            <input id="iNote" type="text" class="form-control" ng-model="taskEditCtrl.task.note">
+                        </div>
+                    </div>
                       <div class="form-group">        
                           <div class="col-sm-offset-2 col-sm-10">
-                              <button type="button" class="btn btn-default" id="btnAdd" >
+                              <button type="button" class="btn btn-default" ng-click="taskEditCtrl.save()" id="btnAdd" >
                                   <span class="glyphicon glyphicon-ok"></span> OK
                               </button>
-                              <button type="button" class="btn btn-default" id="btnEdit">
+                              <button type="button" class="btn btn-default" ng-click="taskEditCtrl.cancel()" id="btnEdit">
                                   <span class="glyphicon glyphicon-remove"></span> Cancel
                               </button>
                           </div>
@@ -206,6 +266,147 @@
                   </form>
               </div>
           </div>      
+        </script>
+
+        <script type="text/ng-template" id="/taskAdd.html">
+            <div class="panel panel-default" ng-controller="TaskAddCtrl as taskAddCtrl">
+                <div class="panel-heading">Add new task</div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="frmAddTask" >
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="action">Ngày nhập</label>
+                            <div class="col-sm-10">
+                                <!-- <input id="iCreateDate" type="text" class="form-control" ng-model="taskAddCtrl.createDate"> -->
+                                <p class="input-group">
+                                    <input type="text" class="form-control" 
+                                        uib-datepicker-popup="{{taskAddCtrl.dateTimeFormat}}"
+                                        ng-model="taskAddCtrl.createDate" 
+                                        is-open="taskAddCtrl.popup1.opened" 
+                                        datepicker-options="taskAddCtrl.dateOptions" 
+                                        ng-required="true" close-text="Close" 
+                                        id="iCreateDate" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="taskAddCtrl.open1()">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </p>
+                            </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Phương tiện</label>
+                          <div class="col-sm-10">
+                              <input id="iVehicle" type="text" class="form-control" ng-model="taskAddCtrl.vehicle">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
+                          <div class="col-sm-10">
+                                <!-- <input id="iOwnOrg" type="text" class="form-control" ng-model="taskAddCtrl.ownOrg"> -->
+                                <select class="form-control" 
+                                        ng-model="taskAddCtrl.ownOrg" 
+                                        ng-options="f for f in taskAddCtrl.lstOwnOrg" id="iOwnOrg"
+                                        value="{{taskAddCtrl.lstOwnOrg[0]}}">
+                                    <option></option>
+                                </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Quy trình</label>
+                          <div class="col-sm-10">
+                                <!-- <input id="iProcessType" type="text" class="form-control" ng-model="taskAddCtrl.processType"> -->
+                                <select class="form-control" 
+                                        ng-model="taskAddCtrl.processType" 
+                                        ng-options="f for f in taskAddCtrl.lstProcessType" id="iProcessType"
+                                        value="{{taskAddCtrl.lstProcessType[0]}}">
+                                    <option></option>
+                                </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Nội dung sửa chữa</label>
+                          <div class="col-sm-10">
+                              <input id="iTastContent" type="text" class="form-control" ng-model="taskAddCtrl.tastContent">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Thời gian bắt đầu</label>
+                          <div class="col-sm-10">
+                                <p class="input-group">
+                                    <!-- <input  type="text" class="form-control" ng-model="taskAddCtrl.beginTime"> -->
+
+                                    <input type="text" class="form-control" 
+                                        uib-datepicker-popup="{{taskAddCtrl.dateTimeFormat}}"
+                                        ng-model="taskAddCtrl.beginTime" 
+                                        is-open="taskAddCtrl.popup2.opened" 
+                                        datepicker-options="taskAddCtrl.dateOptions" 
+                                        ng-required="true" close-text="Close" 
+                                        id="iBeginTime"/>
+                                    <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="taskAddCtrl.open2()">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </span>
+                            </p>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Thời gian kết thúc</label>
+                          <div class="col-sm-10">
+                              <!-- <input id="iEndTime" type="text" class="form-control" ng-model="taskAddCtrl.endTime"> -->
+                                <p class="input-group">
+                                    <input type="text" class="form-control" 
+                                        uib-datepicker-popup="{{taskAddCtrl.dateTimeFormat}}"
+                                        ng-model="taskAddCtrl.endTime" 
+                                        is-open="taskAddCtrl.popup3.opened" 
+                                        datepicker-options="taskAddCtrl.dateOptions" 
+                                        ng-required="true" close-text="Close" 
+                                        id="iEndTime"/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="taskAddCtrl.open3()">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </p>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Thời gian thực tế</label>
+                          <div class="col-sm-10">
+                              <input id="iTaskRealHour" type="text" class="form-control" ng-model="taskAddCtrl.taskRealHour">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Thời gian chờ vật tư</label>
+                          <div class="col-sm-10">
+                              <input id="iWaitMaterialHour" type="text" class="form-control" ng-model="taskAddCtrl.waitMaterialHour">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Số Km</label>
+                          <div class="col-sm-10">
+                              <input id="iKm" type="text" class="form-control" ng-model="taskAddCtrl.km">
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="control-label col-sm-2" for="action">Ghi chú</label>
+                          <div class="col-sm-10">
+                              <input id="iNote" type="text" class="form-control" ng-model="taskAddCtrl.note">
+                          </div>
+                      </div>
+                        <div class="form-group">        
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" class="btn btn-default" ng-click="taskAddCtrl.save()" id="btnAdd" >
+                                    <span class="glyphicon glyphicon-ok"></span> OK
+                                </button>
+                                <button type="button" class="btn btn-default" ng-click="taskAddCtrl.cancel()" id="btnCancel">
+                                    <span class="glyphicon glyphicon-remove"></span> Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>      
         </script>
     </body>
 </html>
