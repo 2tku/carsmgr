@@ -117,7 +117,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 
             console.log(newTask);
             newTask.$save(function(){
-                Tasks.push(newTask);
+                Tasks.query().push(newTask);
                 $location.url('/');
             });
         }
