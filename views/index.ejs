@@ -99,87 +99,89 @@
         </script>
         
         <script type="text/ng-template" id="/tasksView.html">
-            <div class="panel panel-default" ng-controller="TasksViewCtrl as tasksViewCtrl">
-                <div class="panel-heading">View form</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" id="frmViewTasksSearch">
-                        <div class="form-group">
-                           <label class="control-label col-sm-2" for="note">User</label>
-                           <div class="col-sm-4">
-                                <input id="iUserSearch" type="text" class="form-control"/>
-                           </div>
-                           <label class="control-label col-sm-2" for="note">Complete Date</label>
-                           <div class="col-sm-4">
-                               <input id="iCDateSearch" type="text" class="form-control"/>
-                           </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" class="btn btn-default" id="btnSearch">
-                                    <span class="glyphicon glyphicon-search"></span> Search
-                                </button>
+            <div ng-controller="TasksViewCtrl as tasksViewCtrl">
+                <div class="panel panel-default">
+                    <div class="panel-heading">View form</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" id="frmViewTasksSearch">
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="note">User:</label>
+                                <div class="col-sm-4">
+                                    <input id="iUserSearch" type="text" class="form-control"/>
+                                </div>
+                                <label class="control-label col-sm-2" for="note">Complete Date:</label>
+                                <div class="col-sm-4">
+                                    <input id="iCDateSearch" type="text" class="form-control"/>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                    <br/>
-                    <div>
-                        <form id="frmTasksView">
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <!-- -->
-                                        <th>Ngày nhập</th>
-                                        <th>Phương tiện</th>
-                                        <th>Quản lý</th>
-                                        <th>Quy trình</th>
-                                        <th>Nội dung</th>
-                                        <th>T/g bắt đầu</th>
-                                        <th>T/g kết thúc</th>
-                                        <th>T/g thực tế</th>
-                                        <!-- <th>Thời gian chờ vật tư</th> -->
-                                        <th>Số Km</th>
-                                        <th>Ghi chú</th>
-                                        <!-- -->
-                                        <th><input type="checkbox"/></th>
-                                    </tr>
-                                </thead>
-                                <tbody ng-repeat="task in tasks">
-                                    <tr>
-                                        <th scope="row">{{$index + 1}}</th>
-                                        <!-- --> 
-                                        <th><a href="#/{{task._id}}">{{task.create_date | date:'dd/MM/yyyy'}}</a></th>
-                                        <th>{{task.vehicle}}</th>
-                                        <th>{{task.own_org}}</th>
-                                        <th>{{task.process_type}}</th>
-                                        <th>{{task.tast_content}}</th>
-                                        <th>{{task.begin_time | date:'dd/MM/yyyy HH:mm'}}</th>
-                                        <th>{{task.end_time | date:'dd/MM/yyyy HH:mm'}}</th>
-                                        <th>{{task.task_real_hour}}</th>
-                                        <!-- <th>{{task.wait_material_hour}}</th> -->
-                                        <th>{{task.km}}</th>
-                                        <th>{{task.note}}</th>
-                                        <!-- -->
-                                        <th><input type="checkbox"/></th>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="button" class="btn btn-default" id="btnSearch">
+                                        <span class="glyphicon glyphicon-search"></span> Search
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
-                    <form class="form-horizontal" id="frmAction">
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-4">
-                                <button type="button" class="btn btn-default" id="btnAdd" ng-click="tasksViewCtrl.showAddNew()">
-                                    <span class="glyphicon glyphicon-download-alt"></span> Add new
-                                </button>
-                                <button type="button" class="btn btn-default" id="btnEdit">
-                                    <span class="glyphicon glyphicon-trash"></span> Remove
-                                </button>
-                            </div>
-                        </div>
+                </div>
+        
+                <div>
+                    <form id="frmTasksView">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <!-- -->
+                                    <th>Ngày nhập</th>
+                                    <th>Phương tiện</th>
+                                    <th>Quản lý</th>
+                                    <th>Quy trình</th>
+                                    <th>Nội dung</th>
+                                    <th>T/g bắt đầu</th>
+                                    <th>T/g kết thúc</th>
+                                    <th>T/g thực tế</th>
+                                    <!-- <th>Thời gian chờ vật tư</th> -->
+                                    <th>Số Km</th>
+                                    <th>Ghi chú</th>
+                                    <!-- -->
+                                    <th><input type="checkbox"/></th>
+                                </tr>
+                            </thead>
+                            <tbody ng-repeat="task in tasks">
+                                <tr>
+                                    <th scope="row">{{$index + 1}}</th>
+                                    <!-- --> 
+                                    <th><a href="#/{{task._id}}">{{task.create_date | date:'dd/MM/yyyy'}}</a></th>
+                                    <th>{{task.vehicle}}</th>
+                                    <th>{{task.own_org}}</th>
+                                    <th>{{task.process_type}}</th>
+                                    <th>{{task.tast_content}}</th>
+                                    <th>{{task.begin_time | date:'dd/MM/yyyy HH:mm'}}</th>
+                                    <th>{{task.end_time | date:'dd/MM/yyyy HH:mm'}}</th>
+                                    <th>{{task.task_real_hour}}</th>
+                                    <!-- <th>{{task.wait_material_hour}}</th> -->
+                                    <th>{{task.km}}</th>
+                                    <th>{{task.note}}</th>
+                                    <!-- -->
+                                    <th><input type="checkbox"/></th>
+                                </tr>
+                            </tbody>
+                        </table>
                     </form>
-              </div>
-          </div>      
+                </div>
+                <form class="form-horizontal" id="frmAction">
+                    <div class="form-group">
+                        <div class="col-sm-offset-0 col-sm-4">
+                            <button type="button" class="btn btn-default" id="btnAdd" ng-click="tasksViewCtrl.showAddNew()">
+                                <span class="glyphicon glyphicon-download-alt"></span> Add new
+                            </button>
+                            <button type="button" class="btn btn-default" id="btnEdit">
+                                <span class="glyphicon glyphicon-trash"></span> Remove
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </script>
         
         <script type="text/ng-template" id="/taskEdit.html">
