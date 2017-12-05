@@ -147,11 +147,11 @@
                                     <th><input type="checkbox"/></th>
                                 </tr>
                             </thead>
-                            <tbody ng-repeat="task in tasks">
+                            <tbody ng-repeat="task in tasksViewCtrl.tasks">
                                 <tr>
                                     <th scope="row">{{$index + 1}}</th>
                                     <!-- --> 
-                                    <th><a href="#/{{task._id}}">{{task.create_date | date:'dd/MM/yyyy'}}</a></th>
+                                    <th><a href="#!/edit/{{task._id}}">{{task.create_date | date:'dd/MM/yyyy'}}</a></th>
                                     <th>{{task.vehicle}}</th>
                                     <th>{{task.own_org}}</th>
                                     <th>{{task.process_type}}</th>
@@ -188,86 +188,153 @@
             <div class="panel panel-default" ng-controller="TaskEditCtrl as taskEditCtrl">
                 <div class="panel-heading">Edit task</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" id="frmEditTask" >
+                    <form class="form-horizontal" id="frmAddTask" >
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Ngày nhập</label>
-                            <div class="col-sm-10">
-                                <input id="iCreateDate" type="text" class="form-control" ng-model="taskEditCtrl.task.create_date">
+                            <div class="col-sm-2">
+                                <div uib-timepicker ng-model="taskEditCtrl.editTask.create_date" 
+                                        hour-step="1" minute-step="5" 
+                                        show-meridian="true" show-spinners="false">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <p class="input-group">
+                                    <input type="text" class="form-control" 
+                                            uib-datepicker-popup="{{taskEditCtrl.dateTimeFormat}}"
+                                            ng-model="taskEditCtrl.editTask.create_date" 
+                                            is-open="taskEditCtrl.popup1.opened" 
+                                            datepicker-options="taskEditCtrl.dateOptions" 
+                                            ng-required="true" close-text="Close" 
+                                            id="iCreateDate" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="taskEditCtrl.open1()">
+                                            <i class="glyphicon glyphicon-calendar"></i>
+                                        </button>
+                                    </span>
+                                </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Phương tiện</label>
-                            <div class="col-sm-10">
-                                <input id="iVehicle" type="text" class="form-control" ng-model="taskEditCtrl.task.vehicle">
+                            <div class="col-sm-4">
+                                <input id="iVehicle" type="text" class="form-control" ng-model="taskEditCtrl.editTask.vehicle">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
-                            <div class="col-sm-10">
-                                <input id="iOwnOrg" type="text" class="form-control" ng-model="taskEditCtrl.task.own_org">
+                            <div class="col-sm-4">
+                                    <select class="form-control" 
+                                            ng-model="taskEditCtrl.editTask.own_org" 
+                                            ng-options="f for f in taskEditCtrl.lstOwnOrg" id="iOwnOrg"
+                                            value="{{taskEditCtrl.lstOwnOrg[0]}}">
+                                        <option></option>
+                                    </select>
                             </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Quy trình</label>
-                            <div class="col-sm-10">
-                                <input id="iProcessType" type="text" class="form-control" ng-model="taskEditCtrl.task.process_type">
+                            <div class="col-sm-4">
+                                    <select class="form-control" 
+                                            ng-model="taskEditCtrl.editTask.process_type" 
+                                            ng-options="f for f in taskEditCtrl.lstProcessType" id="iProcessType"
+                                            value="{{taskEditCtrl.lstProcessType[0]}}">
+                                        <option></option>
+                                    </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Nội dung sửa chữa</label>
                             <div class="col-sm-10">
-                                <input id="iTastContent" type="text" class="form-control" ng-model="taskEditCtrl.task.tast_content">
+                                <input id="iTastContent" type="text" class="form-control" ng-model="taskEditCtrl.editTask.tast_content">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Thời gian bắt đầu</label>
-                            <div class="col-sm-10">
-                                <input id="iBeginTime" type="text" class="form-control" ng-model="taskEditCtrl.task.begin_time">
+                            <div class="col-sm-2">
+                                    <div uib-timepicker ng-model="taskEditCtrl.editTask.begin_time" 
+                                            hour-step="1" minute-step="15" 
+                                            show-meridian="true" show-spinners="false">
+                                    </div>
                             </div>
-                        </div>
-                        <div class="form-group">
+                            <div class="col-sm-2">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control" 
+                                            uib-datepicker-popup="{{taskEditCtrl.dateTimeFormat}}"
+                                            ng-model="taskEditCtrl.editTask.begin_time" 
+                                            is-open="taskEditCtrl.popup2.opened" 
+                                            datepicker-options="taskEditCtrl.dateOptions" 
+                                            ng-required="true" close-text="Close" 
+                                            id="iBeginTime"/>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="taskEditCtrl.open2()">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
+                            </div>
+
                             <label class="control-label col-sm-2" for="action">Thời gian kết thúc</label>
-                            <div class="col-sm-10">
-                                <input id="iEndTime" type="text" class="form-control" ng-model="taskEditCtrl.task.end_time">
+                            <div class="col-sm-2">
+                                    <div uib-timepicker ng-model="taskEditCtrl.editTask.end_time" 
+                                            hour-step="1" minute-step="15" 
+                                            show-meridian="true" show-spinners="false">
+                                    </div>
+                            </div>
+                            <div class="col-sm-2">
+                                    <p class="input-group">
+                                        <input type="text" class="form-control" 
+                                            uib-datepicker-popup="{{taskEditCtrl.dateTimeFormat}}"
+                                            ng-model="taskEditCtrl.editTask.end_time" 
+                                            is-open="taskEditCtrl.popup3.opened" 
+                                            datepicker-options="taskEditCtrl.dateOptions" 
+                                            ng-required="true" close-text="Close" 
+                                            id="iEndTime"/>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="taskEditCtrl.open3()">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </button>
+                                        </span>
+                                    </p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Thời gian thực tế</label>
-                            <div class="col-sm-10">
-                                <input id="iTaskRealHour" type="text" class="form-control" ng-model="taskEditCtrl.task.task_real_hour">
+                            <div class="col-sm-4">
+                                <input id="iTaskRealHour" type="number" class="form-control" 
+                                    ng-model="taskEditCtrl.editTask.task_real_hour">
                             </div>
-                        </div>
-                        <div class="form-group">
+    
                             <label class="control-label col-sm-2" for="action">Thời gian chờ vật tư</label>
-                            <div class="col-sm-10">
-                                <input id="iWaitMaterialHour" type="text" class="form-control" ng-model="taskEditCtrl.task.wait_material_hour">
+                            <div class="col-sm-4">
+                                <input id="iWaitMaterialHour" type="number" class="form-control" 
+                                        ng-model="taskEditCtrl.editTask.wait_material_hour">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Số Km</label>
-                            <div class="col-sm-10">
-                                <input id="iKm" type="text" class="form-control" ng-model="taskEditCtrl.task.km">
+                            <div class="col-sm-4">
+                                <input id="iKm" type="number" class="form-control" 
+                                        ng-model="taskEditCtrl.editTask.km">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Ghi chú</label>
                             <div class="col-sm-10">
-                                <input id="iNote" type="text" class="form-control" ng-model="taskEditCtrl.task.note">
+                                <textarea class="form-control" rows="3" id="iNote" 
+                                        ng-model="taskEditCtrl.editTask.note"></textarea>
                             </div>
                         </div>
                         <div class="form-group">        
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" class="btn btn-default" ng-click="taskEditCtrl.save()" id="btnAdd" >
+                                <button type="button" class="btn btn-default" ng-click="taskEditCtrl.save()" id="btnEdit" >
                                     <span class="glyphicon glyphicon-ok"></span> OK
                                 </button>
-                                <button type="button" class="btn btn-default" ng-click="taskEditCtrl.cancel()" id="btnEdit">
+                                <button type="button" class="btn btn-default" ng-click="taskEditCtrl.cancel()" id="btnCancel">
                                     <span class="glyphicon glyphicon-remove"></span> Cancel
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-            </div>      
+            </div>
         </script>
 
         <script type="text/ng-template" id="/taskAdd.html">

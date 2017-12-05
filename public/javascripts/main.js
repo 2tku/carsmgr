@@ -1,4 +1,19 @@
 angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+.run(function($rootScope) {
+    $rootScope.dateOptions = {
+        formatYear: 'yy',
+        maxDate: new Date(2020, 5, 22),
+        minDate: new Date(),
+        startingDay: 1
+    };
+    
+    
+    $rootScope.altInputFormats = ['M!/d!/yyyy'];
+    $rootScope.dateTimeFormat = 'dd/MM/yyyy';
+    
+    $rootScope.lstOwnOrg = ['Nội bộ', 'Bên ngoài'];
+    $rootScope.lstProcessType =  ['SCN', 'SCC'];
+})
 .factory('Tasks', ['$resource', function($resource){
         return $resource('/tasks/:id', null, {
             'update': { method:'PUT' }
@@ -33,7 +48,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 // create the controller and inject Angular's $scope
 .controller("TasksViewCtrl", ['$scope', '$routeParams', 'Tasks', '$location',
     function ($scope, $routeParams, Tasks, $location) {
-        $scope.tasks = Tasks.query();
+        this.tasks = Tasks.query();
 
         this.showAddNew = function() {
             $location.url('/add');
@@ -41,36 +56,14 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
     }
 ])
 // create the controller and inject Angular's $scope
-.controller("TaskEditCtrl", ['$scope', '$routeParams', 'Tasks', '$location',
-    function ($scope, $routeParams, Tasks, $location) {
-        $scope.task = Tasks.get({id: $routeParams.id });
-
-        console.log('edit task: ' + $scope.task);
-        $scope.save = function() {
-            if(!$scope.task) return;
-            //var todo = new Todos({ name: $scope.newTodo, completed: false });
-
-            $scope.task.$save(function(){
-                Tasks.query().push($scope.task);
-                $location.url('/view');
-            });
-        }
-
-        $scope.cancel = function() {
-            $scope.task = null;
-            $location.url('/view');
-        }
-    }
-])
-.controller("TaskAddCtrl", ['$scope', '$routeParams', 'Tasks', '$location',
-    function ($scope, $routeParams, Tasks, $location) {
+.controller("TaskEditCtrl", ['$scope', '$rootScope', '$routeParams', 'Tasks', '$location',
+    function ($scope, $rootScope, $routeParams, Tasks, $location) {
         /* config datetime picker [ */
-        this.dateOptions = {
-            formatYear: 'yy',
-            maxDate: new Date(2020, 5, 22),
-            minDate: new Date(),
-            startingDay: 1
-        };
+        this.dateOptions = $rootScope.dateOptions;
+        this.altInputFormats = $rootScope.altInputFormats;
+        this.dateTimeFormat = $rootScope.dateTimeFormat;
+        this.lstOwnOrg = $rootScope.lstOwnOrg;
+        this.lstProcessType =  $rootScope.lstProcessType;
 
         this.open1 = () => {this.popup1.opened = true;};
         this.popup1 = {opened: false};
@@ -80,13 +73,48 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 
         this.open3 = () => {this.popup3.opened = true;};
         this.popup3 = {opened: false};
-
-        this.altInputFormats = ['M!/d!/yyyy'];
-        this.dateTimeFormat = 'dd/MM/yyyy';
         /*] config datetime picker  */
 
-        this.lstOwnOrg = ['Nội bộ', 'Bên ngoài'];
-        this.lstProcessType =  ['SCN', 'SCC'];
+        this.editTask = Tasks.get({id: $routeParams.id });
+
+        console.log('edit task: ');
+        console.log(this.editTask);
+        console.log(new Date());
+
+        this.save = function() {
+            if(!this.editTask) return;
+            //var todo = new Todos({ name: $scope.newTodo, completed: false });
+
+            this.editTask.$save(function(){
+                Tasks.query().push(editTask);
+                $location.url('/view');
+            });
+        }
+
+        this.cancel = function() {
+            $location.url('/view');
+        }
+    }
+])
+.controller("TaskAddCtrl", ['$scope', '$rootScope', '$routeParams', 'Tasks', '$location',
+    function ($scope, $rootScope, $routeParams, Tasks, $location) {
+        /* config datetime picker [ */
+
+        this.dateOptions = $rootScope.dateOptions;
+        this.altInputFormats = $rootScope.altInputFormats;
+        this.dateTimeFormat = $rootScope.dateTimeFormat;
+        this.lstOwnOrg = $rootScope.lstOwnOrg;
+        this.lstProcessType =  $rootScope.lstProcessType;
+
+        this.open1 = () => {this.popup1.opened = true;};
+        this.popup1 = {opened: false};
+
+        this.open2 = () => {this.popup2.opened = true;};
+        this.popup2 = {opened: false};
+
+        this.open3 = () => {this.popup3.opened = true;};
+        this.popup3 = {opened: false};
+        /*] config datetime picker  */
 
         this.createDate = new Date();
         this.vehicle = '';
@@ -135,7 +163,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             templateUrl : '/pageLogin.html',
             controller  : 'LoginCtrl'
         })
-        .when('/edit', {
+        .when('/edit/:id', {
             templateUrl : '/taskEdit.html',
             controller  : 'TaskEditCtrl'
         })
@@ -147,7 +175,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             templateUrl : '/tasksView.html',
             controller  : 'TasksViewCtrl'
         })
-        .otherwise({
+        /*.otherwise({
             redirectTo: '/view'
-        });
+        })*/;
 }]);
