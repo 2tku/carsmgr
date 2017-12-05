@@ -25,3 +25,5 @@ http://rogerdudler.github.io/git-guide/index.vi.html
 
 https://scotch.io/tutorials/creating-a-single-page-todo-app-with-node-and-angular
 http://adrianmejia.com/blog/2014/09/28/angularjs-tutorial-for-beginners-with-nodejs-expressjs-and-mongodb/
+
+https://github.com/angular-app/angular-app

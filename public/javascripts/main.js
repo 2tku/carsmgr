@@ -35,7 +35,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
     function ($scope, $routeParams, Tasks, $location) {
         $scope.tasks = Tasks.query();
 
-        $scope.showAddNew = function() {
+        this.showAddNew = function() {
             $location.url('/add');
         }
     }
@@ -45,13 +45,14 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
     function ($scope, $routeParams, Tasks, $location) {
         $scope.task = Tasks.get({id: $routeParams.id });
 
+        console.log('edit task: ' + $scope.task);
         $scope.save = function() {
             if(!$scope.task) return;
             //var todo = new Todos({ name: $scope.newTodo, completed: false });
 
             $scope.task.$save(function(){
-                Tasks.push($scope.task);
-                $location.url('/');
+                Tasks.query().push($scope.task);
+                $location.url('/view');
             });
         }
 
@@ -88,7 +89,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         this.lstProcessType =  ['SCN', 'SCC'];
 
         this.createDate = new Date();
-        this.vehicle = 'XeOto';
+        this.vehicle = '';
         this.ownOrg = '';
         this.processType = '';
         this.tastContent = '';
@@ -118,7 +119,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             console.log(newTask);
             newTask.$save(function(){
                 Tasks.query().push(newTask);
-                $location.url('/');
+                $location.url('/view');
             });
         }
 
@@ -147,6 +148,6 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             controller  : 'TasksViewCtrl'
         })
         .otherwise({
-            redirectTo: '/'
+            redirectTo: '/view'
         });
 }]);
