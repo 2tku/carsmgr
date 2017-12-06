@@ -27,3 +27,5 @@ https://scotch.io/tutorials/creating-a-single-page-todo-app-with-node-and-angula
 http://adrianmejia.com/blog/2014/09/28/angularjs-tutorial-for-beginners-with-nodejs-expressjs-and-mongodb/
 
 https://github.com/angular-app/angular-app
+
+https://github.com/angular/angular.js/wiki/AngularJS-Training-(AngularJS-Complete-Solution)

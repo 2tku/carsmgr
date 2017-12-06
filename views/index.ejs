@@ -144,7 +144,8 @@
                                     <th>Số Km</th>
                                     <th>Ghi chú</th>
                                     <!-- -->
-                                    <th><input type="checkbox"/></th>
+                                    <th><input type="checkbox" ng-change="tasksViewCtrl.checkAll()" 
+                                            ng-model="tasksViewCtrl.isCheckAll"/></th>
                                 </tr>
                             </thead>
                             <tbody ng-repeat="task in tasksViewCtrl.tasks">
@@ -163,7 +164,7 @@
                                     <th>{{task.km}}</th>
                                     <th>{{task.note}}</th>
                                     <!-- -->
-                                    <th><input type="checkbox"/></th>
+                                    <th><input type="checkbox" ng-model="tasksViewCtrl.editing[$index]"/></th>
                                 </tr>
                             </tbody>
                         </table>
@@ -172,10 +173,10 @@
                 <form class="form-horizontal" id="frmAction">
                     <div class="form-group">
                         <div class="col-sm-offset-0 col-sm-4">
-                            <button type="button" class="btn btn-default" id="btnAdd" ng-click="tasksViewCtrl.showAddNew()">
+                            <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.showAddNew()" id="btnAdd">
                                 <span class="glyphicon glyphicon-download-alt"></span> Add new
                             </button>
-                            <button type="button" class="btn btn-default" id="btnEdit">
+                            <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.removeTasks()" id="btnEdit">
                                 <span class="glyphicon glyphicon-trash"></span> Remove
                             </button>
                         </div>

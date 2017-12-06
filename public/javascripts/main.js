@@ -48,10 +48,42 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 // create the controller and inject Angular's $scope
 .controller("TasksViewCtrl", ['$scope', '$routeParams', 'Tasks', '$location',
     function ($scope, $routeParams, Tasks, $location) {
+        this.isCheckAll = false;
+        this.editing = [];
         this.tasks = Tasks.query();
+
+        this.checkAll = function () {
+            console.log("this.isCheckAll");
+            console.log(this.isCheckAll);
+
+            for(var i = 0 ;i < this.tasks.length; i ++) {
+                this.editing[i] = this.isCheckAll;
+            }
+        }
 
         this.showAddNew = function() {
             $location.url('/add');
+        }
+
+        /*this.checkRemove = function(index) {
+            console.log('this.editing[index]');
+            console.log(this.editing[index]);
+            this.editing[index] = false;
+        }*/
+
+        this.removeTasks = function() {
+            console.log(this.tasks);
+            for(var i = 0 ;i < this.tasks.length; i ++) {
+                if(this.editing[i] == true){
+                    var task = this.tasks[i];
+                    this.tasks.splice(i, 1);
+
+                    Tasks.remove({id: task._id}, function(){
+                    });
+                }
+            }
+
+            $location.url('/view');
         }
     }
 ])
