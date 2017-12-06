@@ -76,19 +76,28 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         /*] config datetime picker  */
 
         this.editTask = Tasks.get({id: $routeParams.id });
+        this.currentDate = new Date();
 
         console.log('edit task: ');
         console.log(this.editTask);
-        console.log(new Date());
+        console.log(this.currentDate);
+
+        this.addAssignStaff = function(){
+            if (this.editTask.assign_staffs.length <= 4) {
+                this.editTask.assign_staffs.push({staff: '', begin_time: new Date(), end_time : null, task_content: ''});
+            }
+        }
+
+        this.deleteAssignStaff = function(index) {
+            this.editTask.assign_staffs.splice(index, 1)
+        }
 
         this.save = function() {
             if(!this.editTask) return;
-            //var todo = new Todos({ name: $scope.newTodo, completed: false });
+            console.log('begin edit task ----');
 
-            this.editTask.$save(function(){
-                Tasks.query().push(editTask);
-                $location.url('/view');
-            });
+            Tasks.update({id: this.editTask._id}, this.editTask);
+            $location.url('/view');
         }
 
         this.cancel = function() {
