@@ -29,3 +29,10 @@ http://adrianmejia.com/blog/2014/09/28/angularjs-tutorial-for-beginners-with-nod
 https://github.com/angular-app/angular-app
 
 https://github.com/angular/angular.js/wiki/AngularJS-Training-(AngularJS-Complete-Solution)
+
+User authen tutorial:
+https://www.ctl.io/developers/blog/post/build-user-authentication-with-node-js-express-passport-and-mongodb
+https://www.danielgynn.com/build-an-authentication-app-using-express-node-passport/
+
+mongoose:
+https://github.com/Automattic/mongoose/tree/master/examples
