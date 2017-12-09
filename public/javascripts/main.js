@@ -20,7 +20,11 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         });
     }]
 )
-.controller('AppCtrl', ()=>{})
+.controller('AppCtrl', ()=>{
+    this.logout = function () {
+
+    }
+})
 // create the controller and inject Angular's $scope
 .controller("LoginCtrl", ['$scope', '$location', '$http', function ($scope, $location, $http) {
     this.lstUserRoles = ['Nhân viên', 'Quản lý', 'ADMIN'];
@@ -195,8 +199,8 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 
         this.createDate = new Date();
         this.vehicle = '';
-        this.ownOrg = '';
-        this.processType = '';
+        this.ownOrg = this.lstOwnOrg[0];
+        this.processType = this.lstProcessType[0];
         this.tastContent = '';
         this.beginTime = new Date();
         this.endTime = null;
@@ -205,8 +209,15 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         this.km = 0;
         this.note = '';
 
+        this.isError = false;
+        this.errorMsg = '';
+
         this.save = function() {
-            if(!this.vehicle || !this.createDate) return;
+            if(!this.vehicle || !this.createDate) {
+                this.isError = true;
+                this.errorMsg = 'Phương tiện hoặc ngày tạo không được trống';
+                return;
+            }
 
             var newTask = new Tasks({ 
                 create_date         : this.createDate,
@@ -230,7 +241,11 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         }
 
         this.saveAndAdd = function() {
-            if(!this.vehicle || !this.createDate) return;
+            if(!this.vehicle || !this.createDate) {
+                this.isError = true;
+                this.errorMsg = 'Phương tiện hoặc ngày tạo không được trống';
+                return;
+            }
 
             var newTask = new Tasks({ 
                 create_date         : this.createDate,
@@ -248,7 +263,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 
             newTask.$save(function(){
                 Tasks.query().push(newTask);
-                $location.url('/');
+                $location.url('#!add');
             });
 
             this.createDate = new Date();
