@@ -36,3 +36,7 @@ https://www.danielgynn.com/build-an-authentication-app-using-express-node-passpo
 
 mongoose:
 https://github.com/Automattic/mongoose/tree/master/examples
+
+deploy:
+
+http://www.krizna.com/centos/installing-node-js-centos-6-sample-app/

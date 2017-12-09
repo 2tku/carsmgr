@@ -20,5 +20,5 @@ function isLoggedIn(req, res, next) {
   console.log('check authen');
   if (req.isAuthenticated()) return next();
 
-  res.redirect('/authen/signin');
+  res.redirect('/authen/login');
 }

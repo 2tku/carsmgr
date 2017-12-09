@@ -8,7 +8,7 @@ var router = express.Router();
 // });
 
 //displays our signup page
-router.get('/signin', function(req, res){
+router.get('/login', function(req, res){
     res.render('login', {error: req.session.error});
 });
 
@@ -52,7 +52,7 @@ router.post('/local-reg',
 //sends the request through our local login/signin strategy, and if successful takes user to homepage, otherwise returns then to signin page
 router.post('/login', passport.authenticate('local-signin', { 
         successRedirect: '/',
-        failureRedirect: '/authen/signin'
+        failureRedirect: '/authen/login'
     })
 );
 

@@ -63,7 +63,7 @@ exports.localAuth = function (username, password) {
         if (err) return deferred.resolve(false);
         
         if(users == null) {
-            console.log("USERNAME NOT FOUND: ", users.user_name);
+            console.log("USERNAME NOT FOUND: ", username);
             deferred.resolve(false);
         } else {
             var hash = users.password;
