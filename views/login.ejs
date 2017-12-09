@@ -18,15 +18,13 @@
   </head>
 
   <body>
-
     <div class="container">
-
       <form class="form-signin" action="/authen/login" method="post">
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading">Nhập mã người dùng, mật khẩu</h2>
         <label for="inputEmail" class="sr-only">Mã nhân viên</label>
-        <input type="email" name="username" class="form-control" required autofocus>
+        <input type="text" name="username" class="form-control" required autofocus>
         <label for="inputPassword" class="sr-only">Mật khẩu</label>
-        <input type="password" name="password" class="form-control" placeholder="Password" required>
+        <input type="password" name="password" class="form-control" placeholder="Mật khẩu" required>
         <div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"> Nhớ mật khẩu
@@ -34,7 +32,7 @@
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Đăng nhập</button>
       </form>
-
+      <a><%= error %></a>
     </div> <!-- /container -->
 
 

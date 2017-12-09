@@ -22,26 +22,62 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 )
 .controller('AppCtrl', ()=>{})
 // create the controller and inject Angular's $scope
-.controller("LoginCtrl", ['$scope', 'Tasks', '$location', function ($scope, Tasks, $location) {
-    this.userName = 'admin';
-    this.pass = 'admin';
+.controller("LoginCtrl", ['$scope', '$location', '$http', function ($scope, $location, $http) {
+    this.lstUserRoles = ['Nhân viên', 'Quản lý', 'ADMIN'];
+    this.userName = '';
+    this.fullName = '';
+    this.userRole = this.lstUserRoles[0];
+    this.pass = '';
+    this.confirmPass = this.pass;
     this.isError = false;
     this.errorMsg = '';
 
-    this.login = function() {
-		if(this.userName === '' || this.pass === ''){
-            this.errorMsg = '[User name] or [password] is null or empty';
-            this.isError = true;
-        } else if (this.userName === 'admin' 
-                && this.pass === 'admin') {
-            // $rootScope.loggedUser = this.userName;
+    this.init = function(strAuthenMsg) {
+        var info = JSON.parse(strAuthenMsg);
+        console.log(info);
+
+        if (info.success && info.success != '') {
             this.isError = false;
             this.errorMsg = '';
-
-            $location.url('/view');
-        } else {
-            this.errorMsg = 'Invalidate user name or password';
+        } else if (info.error && info.error != '') {
             this.isError = true;
+            this.errorMsg = info.error;
+        }
+    }
+
+    this.signup = function() {
+		if(this.userName === '' || this.pass === ''){
+            this.errorMsg = 'Tên đăng nhập hoặc mật khẩu trống';
+            this.isError = true;
+        } else if (this.userName.trim().length < 5) {
+            this.errorMsg = 'Mã người dùng >= 5 ký tự';
+            this.isError = true;
+        } else if (this.pass != this.confirmPass) {
+            this.errorMsg = 'Mật khẩu không trùng';
+            this.isError = true;
+        } else {
+            var thisTmp = this;
+            var userInfo = {
+                'username':this.userName.trim(), 
+                'password':this.pass, 
+                'fullName':this.fullName, 
+                'roleUser':this.userRole};
+            
+            $http.post('/authen/local-reg', userInfo)
+                .then(function(result) {
+                    if (result.data.status == 'error') {
+                        thisTmp.isError = true;
+                        thisTmp.errorMsg = result.data.message;
+                    } else if (result.data.status == 'success') {
+                        thisTmp.isError = false;
+                        thisTmp.errorMsg = '';
+
+                        $location.url('/');
+                    } else {
+                        thisTmp.isError = false;
+                        thisTmp.errorMsg = '';
+                    }
+                });
         }
 	}
 }])
@@ -83,7 +119,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
                 }
             }
 
-            $location.url('/view');
+            $location.url('/');
         }
     }
 ])
@@ -129,11 +165,11 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             console.log('begin edit task ----');
 
             Tasks.update({id: this.editTask._id}, this.editTask);
-            $location.url('/view');
+            $location.url('/');
         }
 
         this.cancel = function() {
-            $location.url('/view');
+            $location.url('/');
         }
     }
 ])
@@ -171,6 +207,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 
         this.save = function() {
             if(!this.vehicle || !this.createDate) return;
+
             var newTask = new Tasks({ 
                 create_date         : this.createDate,
                 vehicle             : this.vehicle,
@@ -188,19 +225,54 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             console.log(newTask);
             newTask.$save(function(){
                 Tasks.query().push(newTask);
-                $location.url('/view');
+                $location.url('/');
             });
         }
 
+        this.saveAndAdd = function() {
+            if(!this.vehicle || !this.createDate) return;
+
+            var newTask = new Tasks({ 
+                create_date         : this.createDate,
+                vehicle             : this.vehicle,
+                own_org             : this.ownOrg,
+                process_type        : this.processType,
+                tast_content        : this.tastContent,
+                begin_time          : this.beginTime,
+                end_time            : this.endTime,
+                task_real_hour      : this.taskRealHour,
+                wait_material_hour  : this.waitMaterialHour,
+                km                  : this.km,
+                note                : this.note
+            });
+
+            newTask.$save(function(){
+                Tasks.query().push(newTask);
+                $location.url('/');
+            });
+
+            this.createDate = new Date();
+            this.vehicle = '';
+            this.ownOrg = '';
+            this.processType = null;
+            this.tastContent = '';
+            this.beginTime = new Date();
+            this.endTime = null;
+            this.taskRealHour = 0;
+            this.waitMaterialHour = 0;
+            this.km = 0;
+            this.notea = '';
+        }
+
         this.cancel = function() {
-            $location.url('/view');
+            $location.url('/');
         }
     }
 ])
 // configure our routes
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-        .when('/', {
+        .when('/adduser', {
             templateUrl : '/pageLogin.html',
             controller  : 'LoginCtrl'
         })
@@ -212,7 +284,7 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             templateUrl : '/taskAdd.html',
             controller  : 'TaskAddCtrl'
         })
-        .when('/view', {
+        .when('/', {
             templateUrl : '/tasksView.html',
             controller  : 'TasksViewCtrl'
         })

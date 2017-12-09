@@ -120,16 +120,19 @@ passport.deserializeUser(function(obj, done) {
 passport.use('local-signin', new LocalStrategy(
     {passReqToCallback : true}, //allows us to pass back the request to the callback
     function(req, username, password, done) {
+        console.log("begin singin");
+        console.log(username);
+        console.log(password);
         authenUtil.localAuth(username, password)
         .then(function (user) {
             if (user) {
                 console.log("LOGGED IN AS: " + user.username);
-                req.session.success = 'You are successfully logged in ' + user.username + '!';
+                req.session.success = 'Đăng nhập người dùng ' + user.username + ' thành công!';
                 done(null, user);
             }
             if (!user) {
                 console.log("COULD NOT LOG IN");
-                req.session.error = 'Could not log user in. Please try again.'; //inform user could not log them in
+                req.session.error = 'Đăng nhập không thành công.'; //inform user could not log them in
                 done(null, user);
             }
         })
@@ -142,19 +145,22 @@ passport.use('local-signin', new LocalStrategy(
 // Use the LocalStrategy within Passport to Register/"signup" users.
 passport.use('local-signup', new LocalStrategy(
     {passReqToCallback : true}, //allows us to pass back the request to the callback
-    function(req, username, password, fullName, roleUser, done) {
-        authenUtil.localReg(username, password)
-        .then(function (user) {
-            if (user) {
-                console.log("REGISTERED: " + user.username);
-                req.session.success = 'You are successfully registered and logged in ' + user.username + '!';
-                done(null, user);
-            }
-            if (!user) {
+    function(req, username, password, done) {
+        authenUtil.localReg(username, password, req.param('fullName'), req.param('roleUser'))
+        .then(function (returnObject) {
+            console.log('get user: ');
+            console.log(returnObject.user);
+            if (returnObject.user != null) {
+                console.log("REGISTERED: " + returnObject.user.user_name);
+                req.session.success = 'Tạo thành công người dùng ' + returnObject.user.user_name + '!';
+                done(null, returnObject.user);
+            } else {
                 console.log("COULD NOT REGISTER");
-                req.session.error = 'That username is already in use, please try a different one.'; //inform user could not log them in
-                done(null, user);
+                req.session.error = 'Người dùng đã tồn tại, tạo người dùng khác.'; //inform user could not log them in
+                done(returnObject.errorMsg, returnObject.user);
             }
+
+            // if (!returnObject.user)
         })
         .fail(function (err){
             console.log(err.body);
