@@ -84,6 +84,9 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
+app.set('port', process.env.PORT || 6060);
+app.listen(app.get('port'));
+
 //===============mongoose=================
 // Use native Node promises
 mongoose.Promise = global.Promise;
