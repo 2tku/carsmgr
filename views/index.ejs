@@ -45,9 +45,11 @@
                     </div>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#/"><i class="fa fa-home"></i> Xem công việc</a></li>
-                        <!-- <li><a href="#!view"><i class="fa fa-comment"></i> Xem công việc</a></li> -->
+                        <li><a href="#/"><i class="fa fa-calendar"></i> Xem công việc</a></li>
+                        <li><a href="#!add"><i class="fa fa-edit"></i> Thêm công việc</a></li>
+                        <% if (userRole == 'ADMIN') {%>
                         <li><a href="#!adduser"><i class="fa fa-comment"></i> Tạo người dùng</a></li>
+                        <% }%>
                         <li><a href="/authen/logout"><i class="fa fa-sign-out"></i> Thoát</a></li>
                     </ul>
                 </div>
@@ -123,19 +125,25 @@
                     <div class="panel-body">
                         <form class="form-horizontal" id="frmViewTasksSearch">
                             <div class="form-group">
-                                <label class="control-label col-sm-2" for="note">User:</label>
+                                <label class="control-label col-sm-2" for="note">Người tạo:</label>
                                 <div class="col-sm-4">
-                                    <input id="iUserSearch" type="text" class="form-control"/>
+                                    <input id="iUserSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchUser"/>
                                 </div>
-                                <label class="control-label col-sm-2" for="note">Complete Date:</label>
+                                <label class="control-label col-sm-2" for="note">Ngày hoàn thành:</label>
                                 <div class="col-sm-4">
-                                    <input id="iCDateSearch" type="text" class="form-control"/>
+                                    <input id="iCDateSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchCompleteDate"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="note">Phương tiện:</label>
+                                <div class="col-sm-4">
+                                    <input id="iVehicleSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchVehicle"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="button" class="btn btn-default" id="btnSearch">
-                                        <span class="glyphicon glyphicon-search"></span> Search
+                                    <button type="button" class="btn btn-default" id="btnSearch" ng-click="tasksViewCtrl.searchTasks()">
+                                        <span class="glyphicon glyphicon-search"></span> Tìm kiếm
                                     </button>
                                 </div>
                             </div>
@@ -192,10 +200,10 @@
                     <div class="form-group">
                         <div class="col-sm-offset-0 col-sm-4">
                             <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.showAddNew()" id="btnAdd">
-                                <span class="glyphicon glyphicon-download-alt"></span> Add new
+                                <span class="glyphicon glyphicon-download-alt"></span> Thêm mới
                             </button>
                             <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.removeTasks()" id="btnEdit">
-                                <span class="glyphicon glyphicon-trash"></span> Remove
+                                <span class="glyphicon glyphicon-trash"></span> Xóa
                             </button>
                         </div>
                     </div>

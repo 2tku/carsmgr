@@ -123,14 +123,12 @@ passport.deserializeUser(function(obj, done) {
 passport.use('local-signin', new LocalStrategy(
     {passReqToCallback : true}, //allows us to pass back the request to the callback
     function(req, username, password, done) {
-        console.log("begin singin");
-        console.log(username);
-        console.log(password);
         authenUtil.localAuth(username, password)
         .then(function (user) {
             if (user) {
                 console.log("LOGGED IN AS: " + user.username);
                 req.session.success = 'Đăng nhập người dùng ' + user.username + ' thành công!';
+                // req.session.userRole = user.role;
                 done(null, user);
             }
             if (!user) {

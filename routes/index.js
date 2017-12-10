@@ -4,7 +4,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', isLoggedIn, function(req, res, next) {
-    res.render('index', {title: 'GarageMgr Demo'});
+    console.log('req.session.userRole' + req.session.passport.user.role);
+
+    res.render('index', {title: 'GarageMgr Demo', userRole: req.session.passport.user.role});
 });
 
 module.exports = router;

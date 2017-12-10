@@ -88,6 +88,11 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 // create the controller and inject Angular's $scope
 .controller("TasksViewCtrl", ['$scope', '$routeParams', 'Tasks', '$location',
     function ($scope, $routeParams, Tasks, $location) {
+        // tim kiem [
+        this.searchUser = '';
+        this.searchCompleteDate = null;
+        this.searchVehicle = '';
+        //]
         this.isCheckAll = false;
         this.editing = [];
         this.tasks = Tasks.query();
@@ -112,18 +117,36 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         }*/
 
         this.removeTasks = function() {
-            console.log(this.tasks);
-            for(var i = 0 ;i < this.tasks.length; i ++) {
+            for(var i = this.tasks.length - 1 ;i >=0 ; i--) {
                 if(this.editing[i] == true){
                     var task = this.tasks[i];
                     this.tasks.splice(i, 1);
 
-                    Tasks.remove({id: task._id}, function(){
-                    });
+                    Tasks.remove({id: task._id}, function(){});
                 }
             }
 
             $location.url('/');
+        }
+
+        this.searchTasks = function() {
+            var searchCondition = {completeDate:'', user:'', vehicle: ''};
+            if (!this.searchCompleteDate) {
+                searchCondition.completeDate = this.completeDate;
+            } else {
+                searchCondition.completeDate = new Date();
+            }
+            if (this.searchUser != '') {
+                searchCondition.user = this.searchUser;
+            }
+
+            if (this.searchVehicle != '') {
+                searchCondition.vehicle = this.searchVehicle;
+
+                this.tasks = Tasks.query(searchCondition);
+            } else {
+                this.tasks = Tasks.query();
+            }
         }
     }
 ])
