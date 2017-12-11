@@ -1,4 +1,7 @@
-angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ngFileSaver'])
+// , 'material.svgAssetsCache'
+angular.module('AppModule', 
+    ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ngFileSaver', 'ngMaterial', 'ngMessages']
+)
 .run(function($rootScope) {
     $rootScope.dateOptions = {
         formatYear: 'yy',
@@ -13,6 +16,21 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
     
     $rootScope.lstOwnOrg = ['Nội bộ', 'Bên ngoài'];
     $rootScope.lstProcessType =  ['SCN', 'SCC'];
+})
+.config(function ($mdDateLocaleProvider) {    
+    // $mdDateLocaleProvider.formatDate = function (date) {
+    //     return moment(date).format('DD/MM/YYYY');
+    // };    
+    moment.locale('vi');
+
+    $mdDateLocaleProvider.formatDate = function(date) {
+        return moment(date).format('DD/MM/YYYY');
+    };
+    
+    $mdDateLocaleProvider.parseDate = function(dateString) {
+        var m = moment(dateString, 'DD/MM/YYYY', true);
+        return m.isValid() ? m.toDate() : new Date(NaN);
+    };
 })
 .factory('Tasks', ['$resource', function($resource){
         return $resource('/tasks/:id', null, {
@@ -89,9 +107,12 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 .controller("TasksViewCtrl", ['$scope', '$routeParams', 'Tasks', '$location', '$http','FileSaver', 'Blob', 
     function ($scope, $routeParams, Tasks, $location, $http, FileSaver, Blob) {
         // tim kiem [
-        this.searchUser = '';
-        this.searchCompleteDate = null;
-        this.searchVehicle = '';
+        this.searchCondition = {
+            completeDate: null,
+            createDateFrom: new Date(), 
+            createDateTo: new Date(),
+            user: '', 
+            vehicle: ''};
         //]
         this.isCheckAll = false;
         this.editing = [];
@@ -130,27 +151,22 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
         }
 
         this.searchTasks = function() {
-            var searchCondition = {completeDate:'', user:'', vehicle: ''};
-            if (!this.searchCompleteDate) {
-                searchCondition.completeDate = this.completeDate;
-            } else {
-                searchCondition.completeDate = new Date();
-            }
-            if (this.searchUser != '') {
-                searchCondition.user = this.searchUser;
-            }
-
-            if (this.searchVehicle != '') {
-                searchCondition.vehicle = this.searchVehicle;
-
-                this.tasks = Tasks.query(searchCondition);
+            console.log(this.searchCondition.createDateFrom);
+            console.log(this.searchCondition.createDateTo);
+            if ((this.searchCondition.vehicle != null && this.searchCondition.vehicle != '') 
+                || (this.searchCondition.completeDate!=null)
+                || (this.searchCondition.createDateFrom != null)
+                || (this.searchCondition.createDateTo != null)
+                || (this.searchCondition.user != null && this.searchCondition.user != '')
+            ){
+                this.tasks = Tasks.query(this.searchCondition);
             } else {
                 this.tasks = Tasks.query();
             }
         }
 
         this.exportExcel = function (uri) {
-            $http.get('/export', {params : {}, responseType: "arraybuffer"})
+            $http.get('/export', {params : this.searchCondition, responseType: "arraybuffer"})
             .then(
                 function(response) {
                     var defaultFileName = 'tasks.xlsx';

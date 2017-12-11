@@ -20,6 +20,7 @@
 
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+        <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.css">
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -31,6 +32,17 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-animate.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-sanitize.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-aria.min.js"></script>
+
+        <!-- Angular Material requires Angular.js Libraries -->
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script> -->
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script> -->
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script> -->
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-messages.min.js"></script>
+
+        <!-- Angular Material Library -->
+        <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.js"></script>
+        <script type="text/javascript" src="/javascripts/moment-with-locales.min.js"></script>
         
         <script type="text/javascript" src="/javascripts/main.js"></script>
         <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
@@ -72,7 +84,7 @@
         <footer class="text-center">
             <nav class="navbar navbar-default">
                 <p><%= title %></p>
-                <p>Author <a href="qthuat@gmail.com">thuattq</a></p>
+                <p>Author <a href="<%= author %>"><%= author %></a></p>
             </nav>
         </footer>
 
@@ -129,17 +141,23 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="note">Người tạo:</label>
                                 <div class="col-sm-4">
-                                    <input id="iUserSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchUser"/>
+                                    <input id="iUserSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchCondition.user"/>
                                 </div>
-                                <label class="control-label col-sm-2" for="note">Ngày hoàn thành:</label>
-                                <div class="col-sm-4">
-                                    <input id="iCDateSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchCompleteDate"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="control-label col-sm-2" for="note">Phương tiện:</label>
                                 <div class="col-sm-4">
-                                    <input id="iVehicleSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchVehicle"/>
+                                    <input id="iVehicleSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchCondition.vehicle"/>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="note">Ngày tạo - Từ:</label>
+                                <div class="col-sm-4">
+                                    <md-datepicker ng-model="tasksViewCtrl.searchCondition.createDateFrom" md-placeholder="Enter date"></md-datepicker>
+                                </div>
+
+                                <label class="control-label col-sm-2" for="note">Đến:</label>
+                                <div class="col-sm-4">
+                                    <md-datepicker ng-model="tasksViewCtrl.searchCondition.createDateTo" md-placeholder="Enter date"></md-datepicker>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -204,12 +222,16 @@
                             <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.showAddNew()" id="btnAdd">
                                 <span class="glyphicon glyphicon-download-alt"></span> Thêm mới
                             </button>
-                            <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.removeTasks()" id="btnEdit">
-                                <span class="glyphicon glyphicon-trash"></span> Xóa
-                            </button>
-                            <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.exportExcel()" id="btnExport">
-                                <span class="glyphicon glyphicon-trash"></span> Xuất excel
-                            </button>
+                            <% if (userRole == 'ADMIN') {%>
+                                <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.removeTasks()" id="btnEdit">
+                                    <span class="glyphicon glyphicon-trash"></span> Xóa
+                                </button>
+                            <% }%>
+                            <% if (userRole == 'ADMIN') {%>
+                                <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.exportExcel()" id="btnExport">
+                                    <span class="glyphicon glyphicon-download"></span> Xuất excel
+                                </button>
+                            <% }%>
                         </div>
                     </div>
                 </form>

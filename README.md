@@ -40,3 +40,13 @@ https://github.com/Automattic/mongoose/tree/master/examples
 deploy:
 
 http://www.krizna.com/centos/installing-node-js-centos-6-sample-app/
+
+angular UI:
+https://github.com/angular-data-grid/angular-data-grid.github.io
+https://material.angularjs.org/latest/
+
+bootstrap Icon:
+https://www.w3schools.com/bootstrap/bootstrap_ref_comp_glyphs.asp
+
+backupdb:
+mongodump -h ds125556.mlab.com:25556 -d carsmgr -u user -p pass -o C:\\mongo\\backup

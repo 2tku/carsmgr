@@ -36,12 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Express
-//app.use(express.logger());
-//app.use(express.cookieParser());
-//app.use(express.bodyParser());
-// app.use(express.methodOverride());
 app.use(session({ secret: 'shhsecret' }));  
-// app.use(express.session({ secret: 'supernova' }));
 app.use(passport.initialize());
 app.use(passport.session());
 

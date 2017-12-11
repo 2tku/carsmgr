@@ -84,7 +84,57 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         + '_' + d.getMilliseconds() + '.xlsx';
     var fullPath = G_APP_ROOT + "\\public\\exports\\" + fileName;
 
-    Task.find()
+    console.log('req.query');
+    console.log(req.query);
+
+    var query = Task.find({});
+
+    if (req.query.vehicle != undefined && req.query.vehicle != null && req.query.vehicle != '') {
+        var regexVehicle = new RegExp(["^", req.query.vehicle.toLowerCase(), "$"].join(""), "i");
+        query.where('vehicle').equals(regexVehicle);
+    }
+    
+    if (req.query.completeDate != undefined && req.query.completeDate != null && req.query.completeDate != '') {
+        query.or([{ end_time: {$gte: req.query.completeDate} }, {end_time: null}]);
+    }
+    
+    if (req.query.user != undefined && req.query.user != null && req.query.user != '') {
+        query.where('assign_staffs').elemMatch({ staff: req.query.user});
+    }
+
+    if (req.query.createDateFrom != undefined && req.query.createDateFrom != null) {
+        query.where('create_date').gt(req.query.createDateFrom);
+    }
+
+    if (req.query.createDateTo != undefined && req.query.createDateTo != null) {
+        query.where('create_date').lt(req.query.createDateTo);
+    }
+
+    // check not null
+    // .where("end_time").ne(null)
+
+    query.sort({ begin_time: -1,  vehicle: 'asc'});
+
+    // execute the query at a later time
+    query.exec(function (err, tasks) {
+        if (err) return next(err);
+
+        worksheet.addRows(tasks);        
+        workbook.xlsx.writeFile(fullPath)
+            .then(function() {
+                console.log('export done');
+
+                res.status(200);
+                res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+                //res.setHeader('Content-disposition', fileName);
+                res.setHeader('Content-type', 'application/vnd.ms-excel');
+                // res.setHeader("x-filename", fileName);
+                
+                res.download(fullPath, fileName);
+            });
+    });
+
+    /*Task.find()
         .sort({ begin_time: -1 })
         .exec(function (err, tasks) {
             if (err) return next(err);
@@ -102,7 +152,7 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
                     
                     res.download(fullPath, fileName);
                 });
-        });
+        });*/
 });
 
 module.exports = router;

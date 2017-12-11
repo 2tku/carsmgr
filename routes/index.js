@@ -6,7 +6,7 @@ var router = express.Router();
 router.get('/', isLoggedIn, function(req, res, next) {
     console.log('req.session.userRole' + req.session.passport.user.role);
 
-    res.render('index', {title: 'GarageMgr Demo', userRole: req.session.passport.user.role});
+    res.render('index', {title: 'GarageMgr Demo', author: '@gmail.com', userRole: req.session.passport.user.role});
 });
 
 module.exports = router;

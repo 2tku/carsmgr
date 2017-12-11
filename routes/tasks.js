@@ -4,36 +4,70 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Task = require('../models/Task.js');
 
+// /* GET /tasks listing. */
+// router.get('/', function(req, res, next) {
+//   // console.log(req.query != null && req.query.vehicle != null && req.query.vehicle != undefined);
+
+//   if (req.query != null && req.query.vehicle != null && req.query.vehicle != undefined) {
+//       // Creates a regex of: /^SomeStringToFind$/i
+//       var regexVehicle = new RegExp(["^", req.query.vehicle.toLowerCase(), "$"].join(""), "i");
+
+//       Task.find({
+//           vehicle: regexVehicle,
+//           //begin_time: {$lt: req.query.completeDate},
+//           //$or: [{end_time: {$gte: req.query.completeDate}}, {end_time: null}],
+//           //assign_staffs: {$elemMatch: {staff: req.query.user}}
+//       })
+//       .sort({ begin_time: -1 })
+//       .exec(function (err, tasks) {
+//           if (err) return next(err);
+//           res.json(tasks);
+//       });
+//   } else {
+//       Task.find()
+//       .sort({ begin_time: -1 })
+//       .exec(function (err, tasks) {
+//           if (err) return next(err);
+//           res.json(tasks);
+//       });
+//   }  
+// });
+
 /* GET /tasks listing. */
 router.get('/', function(req, res, next) {
-  console.log('req.query');
-  console.log(req.query);
-  console.log(req.query.vehicle);
-  console.log(req.query != null && req.query.vehicle != null && req.query.vehicle != undefined);
+  var query = Task.find({});
 
-  if (req.query != null && req.query.vehicle != null && req.query.vehicle != undefined) {
-      // Creates a regex of: /^SomeStringToFind$/i
+  if (req.query.vehicle != undefined && req.query.vehicle != null && req.query.vehicle != '') {
       var regexVehicle = new RegExp(["^", req.query.vehicle.toLowerCase(), "$"].join(""), "i");
+      query.where('vehicle').equals(regexVehicle);
+  }
+  
+  if (req.query.completeDate != undefined && req.query.completeDate != null && req.query.completeDate != '') {
+      query.or([{ end_time: {$gte: req.query.completeDate} }, {end_time: null}]);
+  }
+  
+  if (req.query.user != undefined && req.query.user != null && req.query.user != '') {
+      query.where('assign_staffs').elemMatch({ staff: req.query.user});
+  }
 
-      Task.find({
-          vehicle: regexVehicle,
-          //begin_time: {$lt: req.query.completeDate},
-          //$or: [{end_time: {$gte: req.query.completeDate}}, {end_time: null}],
-          //assign_staffs: {$elemMatch: {staff: req.query.user}}
-      })
-      .sort({ begin_time: -1 })
-      .exec(function (err, tasks) {
-          if (err) return next(err);
-          res.json(tasks);
-      });
-  } else {
-      Task.find()
-      .sort({ begin_time: -1 })
-      .exec(function (err, tasks) {
-          if (err) return next(err);
-          res.json(tasks);
-      });
-  }  
+  if (req.query.createDateFrom != undefined && req.query.createDateFrom != null) {
+      query.where('create_date').gt(req.query.createDateFrom);
+  }
+
+  if (req.query.createDateTo != undefined && req.query.createDateTo != null) {
+      query.where('create_date').lt(req.query.createDateTo);
+  }
+
+  // check not null
+  // .where("end_time").ne(null)
+
+  query.sort({ begin_time: -1,  vehicle: 'asc'});
+  
+  // execute the query at a later time
+  query.exec(function (err, tasks) {
+      if (err) return next(err);
+      res.json(tasks);
+  });
 });
 
 /* POST /task */
