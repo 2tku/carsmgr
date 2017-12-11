@@ -34,6 +34,8 @@
         
         <script type="text/javascript" src="/javascripts/main.js"></script>
         <script type="text/javascript" src="/javascripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
+
+        <script type="text/javascript" src="/javascripts/angular-file-saver.bundle.js"></script>
     </head>
 
     <body ng-controller="AppCtrl as appCtrl">
@@ -204,6 +206,9 @@
                             </button>
                             <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.removeTasks()" id="btnEdit">
                                 <span class="glyphicon glyphicon-trash"></span> Xóa
+                            </button>
+                            <button type="button" class="btn btn-default" ng-click="tasksViewCtrl.exportExcel()" id="btnExport">
+                                <span class="glyphicon glyphicon-trash"></span> Xuất excel
                             </button>
                         </div>
                     </div>

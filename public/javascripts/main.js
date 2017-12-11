@@ -1,4 +1,4 @@
-angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap'])
+angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ngFileSaver'])
 .run(function($rootScope) {
     $rootScope.dateOptions = {
         formatYear: 'yy',
@@ -86,8 +86,8 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
 	}
 }])
 // create the controller and inject Angular's $scope
-.controller("TasksViewCtrl", ['$scope', '$routeParams', 'Tasks', '$location',
-    function ($scope, $routeParams, Tasks, $location) {
+.controller("TasksViewCtrl", ['$scope', '$routeParams', 'Tasks', '$location', '$http','FileSaver', 'Blob', 
+    function ($scope, $routeParams, Tasks, $location, $http, FileSaver, Blob) {
         // tim kiem [
         this.searchUser = '';
         this.searchCompleteDate = null;
@@ -147,6 +147,31 @@ angular.module('AppModule', ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize',
             } else {
                 this.tasks = Tasks.query();
             }
+        }
+
+        this.exportExcel = function (uri) {
+            $http.get('/export', {params : {}, responseType: "arraybuffer"})
+            .then(
+                function(response) {
+                    var defaultFileName = 'tasks.xlsx';
+
+                    var downloadType = response.headers('Content-Type');
+                    var disposition = response.headers('Content-Disposition');
+                    if (disposition) {
+                        var match = disposition.match(/.*filename=\"?([^;\"]+)\"?.*/);
+
+                        if (match[1]) defaultFileName = match[1];
+                    }
+
+                    defaultFileName = defaultFileName.replace(/[<>:"\/\\|?*]+/g, '_');
+
+                    var blob = new Blob([response.data], { type: downloadType });
+                    FileSaver.saveAs(blob, defaultFileName);
+                }
+                , function(response) {
+                    console.log('Download error');
+                    console.log(response);
+            });
         }
     }
 ])

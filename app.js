@@ -11,13 +11,15 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 var session = require('express-session');
 
-
 var authenUtil = require('./utils/authenUtils.js');
 
 var index = require('./routes/index');
 var tasks = require('./routes/tasks');
 var authen = require('./routes/authen');
+var exportData = require('./routes/export');
+var path = require('path');
 
+global.G_APP_ROOT = path.resolve(__dirname);
 
 var app = express();
 
@@ -46,6 +48,7 @@ app.use(passport.session());
 app.use('/', index);
 app.use('/authen', authen);
 app.use('/tasks', tasks);
+app.use('/export', exportData);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
