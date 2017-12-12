@@ -1,6 +1,5 @@
-// , 'material.svgAssetsCache'
 angular.module('AppModule', 
-    ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ngFileSaver', 'ngMaterial', 'ngMessages']
+    ['ngRoute', 'ngResource', 'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ngFileSaver', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache']
 )
 .run(function($rootScope) {
     $rootScope.dateOptions = {
@@ -17,14 +16,9 @@ angular.module('AppModule',
     $rootScope.lstOwnOrg = ['Nội bộ', 'Bên ngoài'];
     $rootScope.lstProcessType =  ['SCN', 'SCC'];
 })
-.config(function ($mdDateLocaleProvider) {    
-    // $mdDateLocaleProvider.formatDate = function (date) {
-    //     return moment(date).format('DD/MM/YYYY');
-    // };    
-    moment.locale('vi');
-
+.config(function ($mdDateLocaleProvider) {
     $mdDateLocaleProvider.formatDate = function(date) {
-        return moment(date).format('DD/MM/YYYY');
+        return !date ? '' : moment(date).format('DD/MM/YYYY');
     };
     
     $mdDateLocaleProvider.parseDate = function(dateString) {
@@ -109,8 +103,8 @@ angular.module('AppModule',
         // tim kiem [
         this.searchCondition = {
             completeDate: null,
-            createDateFrom: new Date(), 
-            createDateTo: new Date(),
+            createDateFrom: null, 
+            createDateTo: null,
             user: '', 
             vehicle: ''};
         //]
@@ -153,6 +147,7 @@ angular.module('AppModule',
         this.searchTasks = function() {
             console.log(this.searchCondition.createDateFrom);
             console.log(this.searchCondition.createDateTo);
+
             if ((this.searchCondition.vehicle != null && this.searchCondition.vehicle != '') 
                 || (this.searchCondition.completeDate!=null)
                 || (this.searchCondition.createDateFrom != null)
