@@ -2,6 +2,7 @@ var express = require('express');
 var passport = require('passport');  
 var router = express.Router();
 var Excel = require('exceljs');
+var moment = require('moment'); 
 
 var mongoose = require('mongoose');
 var Task = require('../models/Task.js');
@@ -102,12 +103,26 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         query.where('assign_staffs').elemMatch({ staff: req.query.user});
     }
 
-    if (req.query.createDateFrom != undefined && req.query.createDateFrom != null) {
-        query.where('create_date').gt(req.query.createDateFrom);
-    }
+    // if (req.query.createDateFrom != undefined && req.query.createDateFrom != null) {
+    //     query.where('create_date').gt(req.query.createDateFrom);
+    // }
 
+    // if (req.query.createDateTo != undefined && req.query.createDateTo != null) {
+    //     query.where('create_date').lt(req.query.createDateTo);
+    // }
+
+    if (req.query.createDateFrom != undefined && req.query.createDateFrom != null) {
+        // remove time
+        var fCDate = moment(req.query.createDateFrom).startOf('hour');
+      
+        query.where('create_date').gt(fCDate.toDate());
+    }
+  
     if (req.query.createDateTo != undefined && req.query.createDateTo != null) {
-        query.where('create_date').lt(req.query.createDateTo);
+        // remove time
+        var tCDate = moment(req.query.createDateTo).startOf('hour').add(1, 'days');
+  
+        query.where('create_date').lt(tCDate.toDate());
     }
 
     // check not null
