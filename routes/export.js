@@ -113,14 +113,14 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
 
     if (req.query.createDateFrom != undefined && req.query.createDateFrom != null) {
         // remove time
-        var fCDate = moment(req.query.createDateFrom).startOf('hour');
+        var fCDate = moment(req.query.createDateFrom).startOf('day');
       
         query.where('create_date').gt(fCDate.toDate());
     }
   
     if (req.query.createDateTo != undefined && req.query.createDateTo != null) {
         // remove time
-        var tCDate = moment(req.query.createDateTo).startOf('hour').add(1, 'days');
+        var tCDate = moment(req.query.createDateTo).startOf('day').add(1, 'days');
   
         query.where('create_date').lt(tCDate.toDate());
     }

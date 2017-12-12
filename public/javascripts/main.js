@@ -103,18 +103,19 @@ angular.module('AppModule',
         // tim kiem [
         this.searchCondition = {
             completeDate: null,
-            createDateFrom: null, 
+            createDateFrom: moment(new Date()).startOf('hour').subtract(1, 'days').toDate(), 
             createDateTo: null,
             user: '', 
             vehicle: ''};
         //]
         this.isCheckAll = false;
         this.editing = [];
-        this.tasks = Tasks.query();
+        // load mac dinh 
+        this.tasks = Tasks.query(this.searchCondition);
 
         this.checkAll = function () {
-            console.log("this.isCheckAll");
-            console.log(this.isCheckAll);
+            // console.log("this.isCheckAll");
+            // console.log(this.isCheckAll);
 
             for(var i = 0 ;i < this.tasks.length; i ++) {
                 this.editing[i] = this.isCheckAll;
@@ -145,8 +146,8 @@ angular.module('AppModule',
         }
 
         this.searchTasks = function() {
-            console.log(this.searchCondition.createDateFrom);
-            console.log(this.searchCondition.createDateTo);
+            // console.log(this.searchCondition.createDateFrom);
+            // console.log(this.searchCondition.createDateTo);
 
             if ((this.searchCondition.vehicle != null && this.searchCondition.vehicle != '') 
                 || (this.searchCondition.completeDate!=null)
