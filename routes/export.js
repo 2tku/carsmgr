@@ -125,6 +125,11 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         query.where('create_date').lt(tCDate.toDate());
     }
 
+    if (req.query.isNotComplete == true) {
+        // ngay ket thuc khac null
+        query.where("end_time").ne(null);
+    }
+
     // check not null
     // .where("end_time").ne(null)
 

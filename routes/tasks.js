@@ -66,6 +66,13 @@ router.get('/', function(req, res, next) {
       query.where('create_date').lt(tCDate.toDate());
   }
 
+  console.log(req.query);
+  if (req.query.isNotComplete == 'true') {
+      // ngay ket thuc == null
+      //query.where("end_time").ne(null);
+      query.where("end_time").equals(null);
+  }
+
   // check not null
   // .where("end_time").ne(null)
 

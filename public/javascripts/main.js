@@ -50,7 +50,7 @@ angular.module('AppModule',
 
     this.init = function(strAuthenMsg) {
         var info = JSON.parse(strAuthenMsg);
-        console.log(info);
+        //console.log(info);
 
         if (info.success && info.success != '') {
             this.isError = false;
@@ -103,10 +103,12 @@ angular.module('AppModule',
         // tim kiem [
         this.searchCondition = {
             completeDate: null,
-            createDateFrom: moment(new Date()).startOf('hour').subtract(1, 'days').toDate(), 
+            //createDateFrom: moment(new Date()).startOf('hour').subtract(1, 'days').toDate(), 
+            createDateFrom: null,
             createDateTo: null,
             user: '', 
-            vehicle: ''};
+            vehicle: '',
+            isNotComplete: true};
         //]
         this.isCheckAll = false;
         this.editing = [];
@@ -149,16 +151,19 @@ angular.module('AppModule',
             // console.log(this.searchCondition.createDateFrom);
             // console.log(this.searchCondition.createDateTo);
 
-            if ((this.searchCondition.vehicle != null && this.searchCondition.vehicle != '') 
+            /*if ((this.searchCondition.vehicle != null && this.searchCondition.vehicle != '') 
                 || (this.searchCondition.completeDate!=null)
                 || (this.searchCondition.createDateFrom != null)
                 || (this.searchCondition.createDateTo != null)
                 || (this.searchCondition.user != null && this.searchCondition.user != '')
+                || (this.searchCondition.isNotComplete == true)
             ){
                 this.tasks = Tasks.query(this.searchCondition);
             } else {
                 this.tasks = Tasks.query();
-            }
+            }*/
+
+            this.tasks = Tasks.query(this.searchCondition);
         }
 
         this.exportExcel = function (uri) {
@@ -210,9 +215,8 @@ angular.module('AppModule',
         this.editTask = Tasks.get({id: $routeParams.id });
         this.currentDate = new Date();
 
-        console.log('edit task: ');
-        console.log(this.editTask);
-        console.log(this.currentDate);
+        this.isError = false;
+        this.errorMsg = '';
 
         this.addAssignStaff = function(){
             if (this.editTask.assign_staffs.length <= 4) {
@@ -225,8 +229,24 @@ angular.module('AppModule',
         }
 
         this.save = function() {
-            if(!this.editTask) return;
-            console.log('begin edit task ----');
+            if(!this.editTask) {
+                this.isError = true;
+                this.errorMsg = 'Không tồn tại nội dung công việc';
+
+                return;
+            }
+
+            if(this.editTask.begin_time != null && this.editTask.end_time != null && this.editTask.begin_time > this.editTask.end_time) {
+                this.isError = true;
+                this.errorMsg = 'Thời gian bắt đầu không được lớn hơn ngày kết thúc thúc công việc';
+                return;
+            }
+
+            // this.processType = SCN => reset;
+            if (this.editTask.process_type == this.lstProcessType[0]) {
+                this.editTask.estimates_date = null;
+                this.editTask.done_percent = null;
+            }
 
             Tasks.update({id: this.editTask._id}, this.editTask);
             $location.url('/');
@@ -268,6 +288,8 @@ angular.module('AppModule',
         this.waitMaterialHour = 0;
         this.km = 0;
         this.note = '';
+        this.estimatesDate = 0;
+        this.donePercent = 0;
 
         this.isError = false;
         this.errorMsg = '';
@@ -277,6 +299,20 @@ angular.module('AppModule',
                 this.isError = true;
                 this.errorMsg = 'Phương tiện hoặc ngày tạo không được trống';
                 return;
+            }
+
+            if(this.beginTime != null && this.endTime != null 
+                    && this.beginTime > this.endTime
+            ) {
+                this.isError = true;
+                this.errorMsg = 'Thời gian bắt đầu không được lớn hơn ngày kết thúc thúc công việc';
+                return;
+            }
+
+            // this.processType = SCN => reset;
+            if (this.processType == this.lstProcessType[0]) {
+                this.estimatesDate = null;
+                this.donePercent = null;
             }
 
             var newTask = new Tasks({ 
@@ -290,10 +326,12 @@ angular.module('AppModule',
                 task_real_hour      : this.taskRealHour,
                 wait_material_hour  : this.waitMaterialHour,
                 km                  : this.km,
-                note                : this.note
+                note                : this.note,
+                estimates_date      : this.estimatesDate,
+                done_percent        : this.donePercent
             });
 
-            console.log(newTask);
+            //console.log(newTask);
             newTask.$save(function(){
                 Tasks.query().push(newTask);
                 $location.url('/');

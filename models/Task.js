@@ -13,6 +13,8 @@ var TaskSchema = new mongoose.Schema({
     wait_material_hour  : Number,
     km                  : Number,
     note                : String,
+    estimates_date      : Number, // so ngay du kien, dung cho SCC
+    done_percent        : Number, // tien do hoan thanh, dung cho SCC
     assign_staffs:[{
         staff       : String,
         begin_time  : Date,

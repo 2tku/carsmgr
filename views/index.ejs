@@ -148,7 +148,6 @@
                                 <div class="col-sm-4">
                                     <input id="iVehicleSearch" type="text" class="form-control" ng-model="tasksViewCtrl.searchCondition.vehicle"/>
                                 </div>
-                                
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="note">Ngày tạo - Từ:</label>
@@ -161,6 +160,13 @@
                                 <div class="col-sm-4">
                                     <md-datepicker ng-model="tasksViewCtrl.searchCondition.createDateTo" md-placeholder="nhập ngày"></md-datepicker>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2" for="note"></label>
+                                <div class="col-sm-4">
+                                    <label><input type="checkbox" ng-model="tasksViewCtrl.searchCondition.isNotComplete"> Chưa hoàn thành</label>
+                                </div>
+                                
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
@@ -273,27 +279,42 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Phương tiện</label>
                             <div class="col-sm-4">
-                                <input id="iVehicle" type="text" class="form-control" ng-model="taskEditCtrl.editTask.vehicle">
+                                <input id="iVehicle" type="text" class="form-control" ng-model="taskEditCtrl.editTask.vehicle" disabled>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
                             <div class="col-sm-4">
-                                    <select class="form-control" 
-                                            ng-model="taskEditCtrl.editTask.own_org" 
-                                            ng-options="f for f in taskEditCtrl.lstOwnOrg" id="iOwnOrg"
-                                            value="{{taskEditCtrl.lstOwnOrg[0]}}">
-                                        <option></option>
-                                    </select>
+                                <input id="iOwnOrg" type="text" class="form-control" ng-model="taskEditCtrl.editTask.own_org">
+                                <!-- <select class="form-control" 
+                                        ng-model="taskEditCtrl.editTask.own_org" 
+                                        ng-options="f for f in taskEditCtrl.lstOwnOrg" id="iOwnOrg"
+                                        value="{{taskEditCtrl.lstOwnOrg[0]}}">
+                                    <option></option>
+                                </select> -->
                             </div>
                             <label class="control-label col-sm-2" for="action">Quy trình</label>
                             <div class="col-sm-4">
                                     <select class="form-control" 
                                             ng-model="taskEditCtrl.editTask.process_type" 
                                             ng-options="f for f in taskEditCtrl.lstProcessType" id="iProcessType"
-                                            value="{{taskEditCtrl.lstProcessType[0]}}">
+                                            value="{{taskEditCtrl.lstProcessType[0]}}"
+                                            disabled>
                                         <option></option>
                                     </select>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="taskEditCtrl.editTask.process_type == taskEditCtrl.lstProcessType[1]"> <!-- taskEditCtrl.lstProcessType[1] = SCC-->
+                            <label class="control-label col-sm-2" for="action">Tiến độ dự kiến (ngày)</label>
+                            <div class="col-sm-4">
+                                <input id="iTaskRealHour" type="number" class="form-control" 
+                                        ng-model="taskEditCtrl.editTask.estimates_date">
+                            </div>
+    
+                            <label class="control-label col-sm-2" for="action">Tiến độ (%)</label>
+                            <div class="col-sm-4">
+                                <input id="iWaitMaterialHour" type="number" class="form-control" 
+                                        ng-model="taskEditCtrl.editTask.done_percent">
                             </div>
                         </div>
                         <div class="form-group">
@@ -412,8 +433,30 @@
                                             <th scope="row">{{$index + 1}}</th>
                                             <!-- -->
                                             <th><input class="form-control" ng-model="assignStaff.staff"></th>
-                                            <th><input class="form-control" ng-model="assignStaff.begin_time"></th>
-                                            <th><input class="form-control" ng-model="assignStaff.end_time"></th>
+                                            <th>
+                                                <div uib-timepicker ng-model="assignStaff.begin_time"
+                                                        hour-step="1" minute-step="15" 
+                                                        show-meridian="true" show-spinners="false">
+                                                </div>
+                                                <input type="text" class="form-control" 
+                                                    uib-datepicker-popup="{{taskEditCtrl.dateTimeFormat}}"
+                                                    ng-model="assignStaff.begin_time" 
+                                                    datepicker-options="taskEditCtrl.dateOptions" 
+                                                    ng-required="true" close-text="Close" 
+                                                    id="iBeginTime"/>
+                                            </th>
+                                            <th><!-- <input class="form-control" ng-model="assignStaff.end_time"> -->
+                                                <div uib-timepicker ng-model="assignStaff.end_time"
+                                                        hour-step="1" minute-step="15" 
+                                                        show-meridian="true" show-spinners="false">
+                                                </div>
+                                                <input type="text" class="form-control" 
+                                                    uib-datepicker-popup="{{taskEditCtrl.dateTimeFormat}}"
+                                                    ng-model="assignStaff.end_time" 
+                                                    datepicker-options="taskEditCtrl.dateOptions" 
+                                                    ng-required="true" close-text="Close" 
+                                                    id="iBeginTime"/>
+                                            </th>
                                             <th><input class="form-control" ng-model="assignStaff.task_content"></th>
                                             <!-- -->
                                             <th><a href="" ng-click="taskEditCtrl.deleteAssignStaff($index)">Xóa</a></th>
@@ -476,13 +519,13 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
                             <div class="col-sm-4">
-                                  <!-- <input id="iOwnOrg" type="text" class="form-control" ng-model="taskAddCtrl.ownOrg"> -->
-                                  <select class="form-control" 
-                                          ng-model="taskAddCtrl.ownOrg" 
+                                    <input id="iOwnOrg" type="text" class="form-control" ng-model="taskAddCtrl.ownOrg">
+                                  <!-- <select class="form-control" 
+                                          ng-model="taskAddCtrl.ownOrg"
                                           ng-options="f for f in taskAddCtrl.lstOwnOrg" id="iOwnOrg"
                                           value="{{taskAddCtrl.lstOwnOrg[0]}}">
                                       <option></option>
-                                  </select>
+                                  </select> -->
                             </div>
                             <label class="control-label col-sm-2" for="action">Quy trình</label>
                             <div class="col-sm-4">
@@ -493,6 +536,19 @@
                                           value="{{taskAddCtrl.lstProcessType[0]}}">
                                       <option></option>
                                   </select>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="taskAddCtrl.processType == taskAddCtrl.lstProcessType[1]"> <!-- taskAddCtrl.lstProcessType[1] = SCC-->
+                            <label class="control-label col-sm-2" for="action">Tiến độ dự kiến (ngày)</label>
+                            <div class="col-sm-4">
+                                <input id="iTaskRealHour" type="number" class="form-control" 
+                                        ng-model="taskAddCtrl.estimatesDate">
+                            </div>
+    
+                            <label class="control-label col-sm-2" for="action">Tiến độ (%)</label>
+                            <div class="col-sm-4">
+                                <input id="iWaitMaterialHour" type="number" class="form-control" 
+                                        ng-model="taskAddCtrl.donePercent">
                             </div>
                         </div>
                         <div class="form-group">
@@ -576,7 +632,7 @@
                                 <textarea class="form-control" rows="3" id="iNote" ng-model="taskAddCtrl.note"></textarea>
                             </div>
                         </div>
-                        <div class="form-group">        
+                        <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="button" class="btn btn-default" ng-click="taskAddCtrl.save()" id="btnAdd" >
                                     <span class="glyphicon glyphicon-ok"></span> Thêm
