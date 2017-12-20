@@ -140,7 +140,7 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
     var fileName = d.getFullYear() + d.getMonth() + d.getDate() 
         + '_' + d.getHours() + d.getMinutes() + d.getSeconds() 
         + '_' + d.getMilliseconds() + '.xlsx';
-    var fullPath = G_APP_ROOT + "\\public\\exports\\" + fileName;
+    var fullPath = G_APP_ROOT + "/public/exports/" + fileName;
 
     var query = Task.find({});
 
