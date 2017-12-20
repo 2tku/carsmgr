@@ -4,35 +4,7 @@ var moment = require('moment');
 
 var mongoose = require('mongoose');
 var Task = require('../models/Task.js');
-
-// /* GET /tasks listing. */
-// router.get('/', function(req, res, next) {
-//   // console.log(req.query != null && req.query.vehicle != null && req.query.vehicle != undefined);
-
-//   if (req.query != null && req.query.vehicle != null && req.query.vehicle != undefined) {
-//       // Creates a regex of: /^SomeStringToFind$/i
-//       var regexVehicle = new RegExp(["^", req.query.vehicle.toLowerCase(), "$"].join(""), "i");
-
-//       Task.find({
-//           vehicle: regexVehicle,
-//           //begin_time: {$lt: req.query.completeDate},
-//           //$or: [{end_time: {$gte: req.query.completeDate}}, {end_time: null}],
-//           //assign_staffs: {$elemMatch: {staff: req.query.user}}
-//       })
-//       .sort({ begin_time: -1 })
-//       .exec(function (err, tasks) {
-//           if (err) return next(err);
-//           res.json(tasks);
-//       });
-//   } else {
-//       Task.find()
-//       .sort({ begin_time: -1 })
-//       .exec(function (err, tasks) {
-//           if (err) return next(err);
-//           res.json(tasks);
-//       });
-//   }  
-// });
+var AuditTask = require('../models/AuditTask.js');
 
 /* GET /tasks listing. */
 router.get('/', function(req, res, next) {
@@ -66,7 +38,7 @@ router.get('/', function(req, res, next) {
       query.where('create_date').lt(tCDate.toDate());
   }
 
-  console.log(req.query);
+  //console.log(req.query);
   if (req.query.isNotComplete == 'true') {
       // ngay ket thuc == null
       //query.where("end_time").ne(null);
@@ -87,10 +59,10 @@ router.get('/', function(req, res, next) {
 
 /* POST /task */
 router.post('/', function(req, res, next) {
-  Task.create(req.body, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
+    Task.create(req.body, function (err, post) {
+      if (err) return next(err);
+      res.json(post);
+    });
 });
 
 /* GET /task/id */
@@ -111,10 +83,22 @@ router.put('/:id', function(req, res, next) {
 
 /* DELETE /task/:id */
 router.delete('/:id', function(req, res, next) {
-  Task.findByIdAndRemove(req.params.id, req.body, function (err, post) {
-    if (err) return next(err);
-    res.json(post);
-  });
+    // audit
+    var auditTask = req.body;
+    if (req.session.passport == null) {
+      auditTask.action_user = 'Undefine';
+    } else {
+      auditTask.action_user = req.session.passport.user.user_name;
+    }
+    
+    AuditTask.create(req.body, function (err, post) {
+        if (err) return next(err);
+
+        Task.findByIdAndRemove(req.params.id, req.body, function (err, post) {
+          if (err) return next(err);
+          res.json(post);
+        });
+    });
 });
 
 module.exports = router;
