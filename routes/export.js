@@ -179,9 +179,10 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         query.where('create_date').lt(tCDate.toDate());
     }
 
-    if (req.query.isNotComplete == true) {
-        // ngay ket thuc khac null
-        query.where("end_time").ne(null);
+    if (req.query.isNotComplete == 'true') {
+        // ngay ket thuc == null
+        //query.where("end_time").ne(null);
+        query.where("end_time").equals(null);
     }
 
     // check not null
@@ -200,13 +201,13 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         for (i = 0; i< tasks.length; i++) {
             task = tasks[i];
             taskNew = {
-                create_date         : task.create_date,
+                create_date         : task.create_date == null ? null: moment(task.create_date).add(7, 'hours').toDate(), //task.create_date,
                 vehicle             : task.vehicle,
                 own_org             : task.own_org,
                 process_type        : task.process_type,
                 tast_content        : task.tast_content,
-                begin_time          : task.begin_time,
-                end_time            : task.end_time,
+                begin_time          : task.begin_time == null ? null: moment(task.begin_time).add(7, 'hours').toDate(), //task.begin_time,
+                end_time            : task.end_time == null ? null: moment(task.end_time).add(7, 'hours').toDate(), //task.end_time,
                 task_real_hour      : task.task_real_hour,
                 wait_material_hour  : task.wait_material_hour,
                 km                  : task.km,
@@ -224,11 +225,11 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
             for (j = 0; j<task.assign_staffs.length;j++){
                 staff = task.assign_staffs[j];
                 var staffTask = {
-                    create_date : task.create_date,
+                    create_date : task.create_date == null? null: moment(task.create_date).add(7, 'hours').toDate(), //task.create_date,
                     vehicle     : task.vehicle,
                     staff       : staff.staff,
-                    begin_time  : staff.begin_time,
-                    end_time    : staff.end_time,
+                    begin_time  : staff.begin_time == null ? null: moment(staff.begin_time).add(7, 'hours').toDate(), //staff.begin_time,
+                    end_time    : staff.end_time == null? null: moment(staff.end_time).add(7, 'hours').toDate(), //staff.end_time,
                     task_content: staff.task_content
                 }
                 staffs.push(staffTask);
