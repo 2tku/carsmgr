@@ -36,7 +36,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Express
-app.use(session({ secret: 'shhsecret' }));  
+app.use(session({ 
+    secret: 'shhsecret' ,
+    // secret: cookie_secret,
+    resave: true,
+    saveUninitialized: true
+}));  
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -91,13 +96,14 @@ mongoose.Promise = global.Promise;
 
 // configuration =================
 var options = {
-    useMongoClient: true,
+    // useMongoClient: true,
     autoIndex: false, // Don't build indexes
     reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
     reconnectInterval: 500, // Reconnect every 500ms
     poolSize: 1, // Maintain up to 10 socket connections
     // If not connected, return errors immediately rather than waiting for reconnect
-    bufferMaxEntries: 0
+    bufferMaxEntries: 0,
+    useNewUrlParser: true
 };
 
 mongoose.connect('mongodb://thuattq:thuattq@ds125556.mlab.com:25556/carsmgr', options)

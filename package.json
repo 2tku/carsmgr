@@ -12,16 +12,20 @@
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
-    "ejs": "~2.5.7",
-    "exceljs": "^0.8.0",
-    "express": "~4.15.5",
+    "ejs": "^2.5.9",
+    "exceljs": "^1.13.0",
+    "express": "^4.17.1",
     "express-session": "^1.15.6",
     "moment": "^2.19.4",
-    "mongoose": "^4.13.6",
-    "morgan": "~1.9.0",
+    "mongodb": "^3.2.7",
+    "mongoose": "^5.6.1",
+    "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "q": "^1.5.1",
     "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
