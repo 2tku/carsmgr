@@ -4,9 +4,13 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', isLoggedIn, function(req, res, next) {
-    console.log('req.session.userRole' + req.session.passport.user.role);
+    // console.log('req.session.userRole' + req.session.passport.user.role);
 
-    res.render('index', {title: 'GarageMgr Demo', author: '@gmail.com', userRole: req.session.passport.user.role});
+    res.render('index', {
+      title: 'TasksMGR', 
+      author: '@gmail.com', 
+      userRole: req.session.passport.user.role
+    });
 });
 
 module.exports = router;
@@ -19,8 +23,10 @@ module.exports = router;
 //   res.redirect('/authen/signin');
 // }
 function isLoggedIn(req, res, next) {
-  console.log('check authen');
-  if (req.isAuthenticated()) return next();
+  // console.log('check authen');
+  if (req.isAuthenticated()) {
+    return next();
+  }
 
   res.redirect('/authen/login');
 }
