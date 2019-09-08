@@ -1,26 +1,31 @@
 # carsmgr
-demo firebase web + node js
+Demo firebase web + node js.
 
-Require:
----------
+Requirement:
+-------------
 
-0. install env node.js :
+0. Install env node.js :
+
 ref: https://github.com/felixrieseberg/npm-windows-upgrade#usage
 
-1. install express:
+1. Install express:
+
 $ npm install express --save
 
-2. install deamon:
+2. Install deamon:
+
 $ npm install nodemon --save-dev
 
 You can run 
 $ npm run dev 
 to trigger nodemon server.js.
 
-3. install mongodb:
+3. Install mongodb:
+
 $ npm install mongodb --save
 
-4. install Embedded JavaScript:
+4. Install Embedded JavaScript:
+
 $ npm install ejs --save
 
 Start app:
