@@ -9,7 +9,6 @@ angular.module('AppModule',
         startingDay: 1
     };
     
-    
     $rootScope.altInputFormats = ['M!/d!/yyyy'];
     $rootScope.dateTimeFormat = 'dd/MM/yyyy';
     
@@ -80,6 +79,64 @@ angular.module('AppModule',
                 'roleUser':this.userRole};
             
             $http.post('/authen/local-reg', userInfo)
+                .then(function(result) {
+                    if (result.data.status == 'error') {
+                        thisTmp.isError = true;
+                        thisTmp.errorMsg = result.data.message;
+                    } else if (result.data.status == 'success') {
+                        thisTmp.isError = false;
+                        thisTmp.errorMsg = '';
+
+                        $location.url('/');
+                    } else {
+                        thisTmp.isError = false;
+                        thisTmp.errorMsg = '';
+                    }
+                });
+        }
+	}
+}])
+.controller("ChangePassCtrl", ['$scope', '$location', '$http', 
+function ($scope, $location, $http) {
+    this.userName = '';
+    this.oldPass = '';
+    this.newPass = '';
+    this.confirmPass = this.newPass;
+    this.isError = false;
+    this.errorMsg = '';
+
+    this.init = function(strAuthenMsg) {
+        var info = JSON.parse(strAuthenMsg);
+        //console.log(info);
+
+        if (info.success && info.success != '') {
+            this.isError = false;
+            this.errorMsg = '';
+        } else if (info.error && info.error != '') {
+            this.isError = true;
+            this.errorMsg = info.error;
+        }
+    }
+
+    this.changePass = function() {
+		if (this.userName === '' || this.oldPass === '' || this.newPass === '') {
+            this.errorMsg = 'Tên đăng nhập hoặc mật khẩu cũ/mới không được trống';
+            this.isError = true;
+        } else if (this.userName.trim().length < 5) {
+            this.errorMsg = 'Mã người dùng phải >= 5 ký tự';
+            this.isError = true;
+        } else if (this.newPass != this.confirmPass) {
+            this.errorMsg = 'Mật khẩu mới không khớp';
+            this.isError = true;
+        } else {
+            var thisTmp = this;
+            var userInfo = {
+                'username':this.userName.trim(), 
+                'password':this.oldPass,
+                'newPass':this.newPass
+            };
+            
+            $http.post('/authen/change-pass', userInfo)
                 .then(function(result) {
                     if (result.data.status == 'error') {
                         thisTmp.isError = true;
@@ -386,8 +443,12 @@ angular.module('AppModule',
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/adduser', {
-            templateUrl : '/pageLogin.html',
+            templateUrl : '/userAdd.html',
             controller  : 'LoginCtrl'
+        })
+        .when('/changepass', {
+            templateUrl : '/changePass.html',
+            controller  : 'ChangePassCtrl'
         })
         .when('/edit/:id', {
             templateUrl : '/taskEdit.html',

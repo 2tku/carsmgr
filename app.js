@@ -1,6 +1,6 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -106,7 +106,7 @@ var options = {
     useNewUrlParser: true
 };
 
-mongoose.connect('mongodb://thuattq:thuattq@ds125556.mlab.com:25556/carsmgr', options)
+mongoose.connect('mongodb+srv://[username]:[password]@cluster0.xq1ed.mongodb.net/[schema]?retryWrites=true&w=majority', options)
     .then(() =>  console.log('connection succesful'))
     .catch((err) => console.error('err when connect db; error: ' + err));
 
@@ -153,8 +153,6 @@ passport.use('local-signup', new LocalStrategy(
     function(req, username, password, done) {
         authenUtil.localReg(username, password, req.param('fullName'), req.param('roleUser'))
         .then(function (returnObject) {
-            console.log('get user: ');
-            console.log(returnObject.user);
             if (returnObject.user != null) {
                 console.log("REGISTERED: " + returnObject.user.user_name);
                 req.session.success = 'Tạo thành công người dùng ' + returnObject.user.user_name + '!';
@@ -169,6 +167,29 @@ passport.use('local-signup', new LocalStrategy(
         })
         .fail(function (err){
             console.log(err.body);
+        });
+    }
+));
+
+passport.use('local-changepass', new LocalStrategy(
+    {passReqToCallback : true},
+    function(req, username, password, done) {
+
+        authenUtil.localChangePass(username, password, req.param('newPass'))
+        .then(function (returnObject) {
+            console.log("returnObject.errorMsg: " + returnObject.errorMsg);
+            console.log("returnObject.user: " + returnObject.user);
+
+            if (returnObject.user != null) {
+                req.session.success = 'Đổi mật khẩu cho người dùng ' + returnObject.user.user_name + ' thành công.';
+                done(null, returnObject.user);
+            } else {
+                req.session.error = 'Đổi mật khẩu không thành công.';
+                done(returnObject.errorMsg, returnObject.user);
+            }
+        })
+        .fail(function (err){
+            console.log("error: " + err.body);
         });
     }
 ));

@@ -16,9 +16,11 @@ $ npm install express --save
 
 $ npm install nodemon --save-dev
 
-You can run 
-$ npm run dev 
-to trigger nodemon server.js.
+/* -- not used
+    You can run 
+    $ npm run dev 
+    to trigger nodemon server.js.
+*/
 
 3. Install mongodb:
 

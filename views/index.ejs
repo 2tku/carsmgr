@@ -22,7 +22,6 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script> -->
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.min.js"></script>
@@ -33,9 +32,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-aria.min.js"></script>
 
     <!-- Angular Material requires Angular.js Libraries -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script> -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script> -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-messages.min.js"></script>
 
     <!-- Angular Material Library -->
@@ -62,6 +58,7 @@
                     <li><a href="#!add"><i class="fa fa-edit"></i> Thêm công việc</a></li>
                     <% if (userRole == 'ADMIN') {%>
                     <li><a href="#!adduser"><i class="fa fa-comment"></i> Tạo người dùng</a></li>
+                    <li><a href="#!changepass"><i class="fa fa-unlock"></i> Đổi mật khẩu</a></li>
                     <% }%>
                     <li><a href="/authen/logout"><i class="fa fa-sign-out"></i> Thoát</a></li>
                 </ul>
@@ -70,11 +67,6 @@
     </header>
 
     <div class="container">
-        <!-- <div class="jumbotron">
-            <h1>Demo html</h1>
-            <p>Demo bootstrap, angularjs, nodejs.</p>
-        </div> -->
-
         <div id="main">
             <div ng-view></div>
         </div>
@@ -88,7 +80,7 @@
     </footer>
 
     <!-- Template -->
-    <script type="text/ng-template" id="/pageLogin.html">
+    <script type="text/ng-template" id="/userAdd.html">
         <div class="panel panel-default" ng-controller="LoginCtrl as loginCtrl">
             <div class="panel-heading">Thông tin người dùng</div>
             <div class="panel-body">
@@ -131,6 +123,41 @@
         </div>      
     </script>
     
+    <script type="text/ng-template" id="/changePass.html">
+        <div class="panel panel-default" ng-controller="ChangePassCtrl as changePassCtrl">
+            <div class="panel-heading">Thông tin người dùng</div>
+            <div class="panel-body">
+                <form id="frmLogin">
+                    <div class="form-group">
+                        <label for="email">Mã đăng nhập:</label>
+                        <input id="iUser" type="text" class="form-control" ng-model="changePassCtrl.userName"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Mật khẩu cũ:</label>
+                        <input id="iPass" type="password" class="form-control" ng-model="changePassCtrl.oldPass"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Mật khẩu mới:</label>
+                        <input id="iPass" type="password" class="form-control" ng-model="changePassCtrl.newPass"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Nhập lại mật khẩu mới:</label>
+                        <input id="iPass" type="password" class="form-control" ng-model="changePassCtrl.confirmPass"/>
+                    </div>
+
+                    <button type="button" class="btn btn-default" ng-click="changePassCtrl.changePass()" id="btnLogin">
+                        <span class="glyphicon glyphicon-log-in"></span>Đổi mật khẩu
+                    </button>
+                </form>
+            </div>
+            <div class="panel-body" >
+                <div class="alert alert-danger" ng-show="changePassCtrl.isError">
+                    <strong>Error!</strong> {{changePassCtrl.errorMsg}}.
+                </div>
+            </div>
+        </div>      
+    </script>
+
     <script type="text/ng-template" id="/tasksView.html">
         <div ng-controller="TasksViewCtrl as tasksViewCtrl">
             <div class="panel panel-default">
