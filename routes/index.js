@@ -7,7 +7,7 @@ router.get('/', isLoggedIn, function(req, res, next) {
     // console.log('req.session.userRole' + req.session.passport.user.role);
 
     res.render('index', {
-      title: 'TasksMGR', 
+      title: 'GarageMgr', 
       author: '@gmail.com', 
       userRole: req.session.passport.user.role
     });
