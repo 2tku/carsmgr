@@ -11,11 +11,15 @@ var TaskSchema = new mongoose.Schema({
     end_time            : Date,
     task_real_hour      : Number,
     wait_material_hour  : Number,
-    km                  : Number,
     note                : String,
     estimates_date      : Number, // so ngay du kien, dung cho SCC
     done_percent        : Number, // tien do hoan thanh, dung cho SCC
-    assign_staffs:[{
+    fuel                : { type: Number, default: 0}, // nhien lieu, type ~ lit
+    cost                : { type: Number, default: 0}, // chi phi, type ~ VND
+    material: [{
+        name  : String
+    }],
+    assign_staffs: [{
         staff       : String,
         begin_time  : Date,
         end_time    : Date,

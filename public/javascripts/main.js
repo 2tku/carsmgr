@@ -343,10 +343,13 @@ function ($scope, $location, $http) {
         this.endTime = null;
         this.taskRealHour = 0;
         this.waitMaterialHour = 0;
-        this.km = 0;
         this.note = '';
         this.estimatesDate = 0;
         this.donePercent = 0;
+
+        this.fuel = 0;
+        this.cost = 0;
+        this.material = [];
 
         this.isError = false;
         this.errorMsg = '';
@@ -382,10 +385,12 @@ function ($scope, $location, $http) {
                 end_time            : this.endTime,
                 task_real_hour      : this.taskRealHour,
                 wait_material_hour  : this.waitMaterialHour,
-                km                  : this.km,
                 note                : this.note,
                 estimates_date      : this.estimatesDate,
-                done_percent        : this.donePercent
+                done_percent        : this.donePercent,
+                fuel                : this.fuel,
+                cost                : this.cost,
+                material            : this.material
             });
 
             //console.log(newTask);
@@ -412,8 +417,10 @@ function ($scope, $location, $http) {
                 end_time            : this.endTime,
                 task_real_hour      : this.taskRealHour,
                 wait_material_hour  : this.waitMaterialHour,
-                km                  : this.km,
-                note                : this.note
+                note                : this.note,
+                fuel                : this.fuel,
+                cost                : this.cost,
+                material            : this.material
             });
 
             newTask.$save(function(){
@@ -430,8 +437,10 @@ function ($scope, $location, $http) {
             this.endTime = null;
             this.taskRealHour = 0;
             this.waitMaterialHour = 0;
-            this.km = 0;
             this.notea = '';
+            this.fuel = 0;
+            this.cost = 0;
+            this.material = [];
         }
 
         this.cancel = function() {

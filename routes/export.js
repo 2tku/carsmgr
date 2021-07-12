@@ -42,10 +42,7 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
     var workbook = new Excel.Workbook();
 
     workbook.creator = 'CarsMgr';
-    //workbook.lastModifiedBy = 'Her';
     workbook.created = new Date();
-    //workbook.modified = new Date();
-    //workbook.lastPrinted = new Date(2016, 9, 27);
     // Set workbook dates to 1904 date system
     workbook.properties.date1904 = true;
     workbook.views = [{
@@ -84,8 +81,9 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         { header: ['TG chờ vật tư',''], 							  key: 'wait_material_hour',width: 10 , style: {border: cBorder, font: cFont}},
         { header: ['Nguyên nhân - biên pháp khắc phục về sau',''], 	    key: 'problem', 		width: 20 , style: {border: cBorder, font: cFont}},
         { header: ['Biện pháp xử lý',''], 							    key: 'handling', 		width: 20 , style: {border: cBorder, font: cFont}},
-        { header: ['Số Km',''], 										key: 'km', 				width: 10 , style: {border: cBorder, font: cFont}},
-        { header: ['Ghi chú',''], 									    key: 'note', 			width: 30 , style: {border: cBorder, font: cFont}}
+        { header: ['Chi phí',''], 										key: 'cost', 			width: 30 , style: {border: cBorder, font: cFont, numFmt: '0.00'}},
+        { header: ['Nhiên liệu',''], 									key: 'fuel', 			width: 30 , style: {border: cBorder, font: cFont}},
+        { header: ['Ghi chú',''], 									    key: 'note', 			width: 60 , style: {border: cBorder, font: cFont}}
     ];
 
     // format Header
@@ -210,10 +208,11 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
                 end_time            : task.end_time == null ? null: moment(task.end_time).add(7, 'hours').toDate(), //task.end_time,
                 task_real_hour      : task.task_real_hour,
                 wait_material_hour  : task.wait_material_hour,
-                km                  : task.km,
                 note                : task.note,
                 estimates_date      : task.estimates_date,
-                done_percent        : task.done_percent
+                done_percent        : task.done_percent,
+                fuel                : task.fuel == null ? 0 : task.fuel,
+                cost                : tasks.cost == null ? 0 : tasks.cost
             };
 
             if (task.problems.length > 0) {

@@ -219,8 +219,6 @@
                                 <th>T/g bắt đầu</th>
                                 <th>T/g kết thúc</th>
                                 <th>T/g thực tế</th>
-                                <!-- <th>Thời gian chờ vật tư</th> -->
-                                <th>Số Km</th>
                                 <th>Ghi chú</th>
                                 <!-- -->
                                 <th><input type="checkbox" ng-change="tasksViewCtrl.checkAll()" 
@@ -239,8 +237,6 @@
                                 <th>{{task.begin_time | date:'dd/MM/yyyy HH:mm'}}</th>
                                 <th>{{task.end_time | date:'dd/MM/yyyy HH:mm'}}</th>
                                 <th>{{task.task_real_hour}}</th>
-                                <!-- <th>{{task.wait_material_hour}}</th> -->
-                                <th>{{task.km}}</th>
                                 <th>{{task.note}}</th>
                                 <!-- -->
                                 <th><input type="checkbox" ng-model="tasksViewCtrl.editing[$index]"/></th>
@@ -306,17 +302,15 @@
                         <div class="col-sm-4">
                             <input id="iVehicle" type="text" class="form-control" ng-model="taskEditCtrl.editTask.vehicle" disabled>
                         </div>
+                        <label class="control-label col-sm-2" for="action">Nhiên liệu</label>
+                        <div class="col-sm-4">
+                            <input id="iFuel" type="number" class="form-control" ng-model="taskEditCtrl.editTask.fuel">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
                         <div class="col-sm-4">
                             <input id="iOwnOrg" type="text" class="form-control" ng-model="taskEditCtrl.editTask.own_org">
-                            <!-- <select class="form-control" 
-                                    ng-model="taskEditCtrl.editTask.own_org" 
-                                    ng-options="f for f in taskEditCtrl.lstOwnOrg" id="iOwnOrg"
-                                    value="{{taskEditCtrl.lstOwnOrg[0]}}">
-                                <option></option>
-                            </select> -->
                         </div>
                         <label class="control-label col-sm-2" for="action">Quy trình</label>
                         <div class="col-sm-4">
@@ -329,7 +323,7 @@
                                 </select>
                         </div>
                     </div>
-                    <div class="form-group" ng-show="taskEditCtrl.editTask.process_type == taskEditCtrl.lstProcessType[1]"> <!-- taskEditCtrl.lstProcessType[1] = SCC-->
+                    <div class="form-group" ng-show="taskEditCtrl.editTask.process_type == taskEditCtrl.lstProcessType[1]">
                         <label class="control-label col-sm-2" for="action">Tiến độ dự kiến (ngày)</label>
                         <div class="col-sm-4">
                             <input id="iTaskRealHour" type="number" class="form-control" 
@@ -411,10 +405,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="action">Số Km</label>
+                        <label class="control-label col-sm-2" for="action">Vật tư</label>
                         <div class="col-sm-4">
-                            <input id="iKm" type="number" class="form-control" 
-                                    ng-model="taskEditCtrl.editTask.km">
+                            <input id="iMaterial" type="number" class="form-control" ng-model="taskEditCtrl.editTask.material">
+                        </div>
+                        <label class="control-label col-sm-2" for="action">Chi phí</label>
+                        <div class="col-sm-4">
+                            <input id="iCost" type="number" class="form-control" ng-model="taskEditCtrl.editTask.cost">
                         </div>
                     </div>
                     <div class="form-group">
@@ -470,7 +467,7 @@
                                                 ng-required="true" close-text="Close" 
                                                 id="iBeginTime"/>
                                         </th>
-                                        <th><!-- <input class="form-control" ng-model="assignStaff.end_time"> -->
+                                        <th>
                                             <div uib-timepicker ng-model="assignStaff.end_time"
                                                     hour-step="1" minute-step="15" 
                                                     show-meridian="true" show-spinners="false">
@@ -518,7 +515,6 @@
                                     show-meridian="true" show-spinners="false"></div>
                         </div>
                         <div class="col-sm-2">
-                            <!-- <input id="iCreateDate" type="text" class="form-control" ng-model="taskAddCtrl.createDate"> -->
                             <p class="input-group">
                                 <input type="text" class="form-control" 
                                         uib-datepicker-popup="{{taskAddCtrl.dateTimeFormat}}"
@@ -540,21 +536,18 @@
                         <div class="col-sm-4">
                             <input id="iVehicle" type="text" class="form-control" ng-model="taskAddCtrl.vehicle">
                         </div>
+                        <label class="control-label col-sm-2" for="action">Nhiên liệu</label>
+                        <div class="col-sm-4">
+                            <input id="iFuel" type="number" class="form-control" ng-model="taskAddCtrl.fuel">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="action">Đơn vị quản lý</label>
                         <div class="col-sm-4">
                                 <input id="iOwnOrg" type="text" class="form-control" ng-model="taskAddCtrl.ownOrg">
-                                <!-- <select class="form-control" 
-                                        ng-model="taskAddCtrl.ownOrg"
-                                        ng-options="f for f in taskAddCtrl.lstOwnOrg" id="iOwnOrg"
-                                        value="{{taskAddCtrl.lstOwnOrg[0]}}">
-                                    <option></option>
-                                </select> -->
                         </div>
                         <label class="control-label col-sm-2" for="action">Quy trình</label>
                         <div class="col-sm-4">
-                                <!-- <input id="iProcessType" type="text" class="form-control" ng-model="taskAddCtrl.processType"> -->
                                 <select class="form-control" 
                                         ng-model="taskAddCtrl.processType" 
                                         ng-options="f for f in taskAddCtrl.lstProcessType" id="iProcessType"
@@ -563,7 +556,7 @@
                                 </select>
                         </div>
                     </div>
-                    <div class="form-group" ng-show="taskAddCtrl.processType == taskAddCtrl.lstProcessType[1]"> <!-- taskAddCtrl.lstProcessType[1] = SCC-->
+                    <div class="form-group" ng-show="taskAddCtrl.processType == taskAddCtrl.lstProcessType[1]">
                         <label class="control-label col-sm-2" for="action">Tiến độ dự kiến (ngày)</label>
                         <div class="col-sm-4">
                             <input id="iTaskRealHour" type="number" class="form-control" 
@@ -615,7 +608,6 @@
                                 </div>
                         </div>
                         <div class="col-sm-2">
-                            <!-- <input id="iEndTime" type="text" class="form-control" ng-model="taskAddCtrl.endTime"> -->
                                 <p class="input-group">
                                     <input type="text" class="form-control" 
                                         uib-datepicker-popup="{{taskAddCtrl.dateTimeFormat}}"
@@ -645,15 +637,18 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="action">Số Km</label>
+                        <label class="control-label col-sm-2" for="action">Vật tư</label>
                         <div class="col-sm-4">
-                            <input id="iKm" type="number" class="form-control" ng-model="taskAddCtrl.km">
+                            <input id="iMaterial" type="number" class="form-control" ng-model="taskAddCtrl.material">
+                        </div>
+                        <label class="control-label col-sm-2" for="action">Chi phí</label>
+                        <div class="col-sm-4">
+                            <input id="iCost" type="number" class="form-control" ng-model="taskAddCtrl.cost">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="action">Ghi chú</label>
                         <div class="col-sm-10">
-                            <!-- <input id="iNote" type="text" class="form-control" ng-model="taskAddCtrl.note"> -->
                             <textarea class="form-control" rows="3" id="iNote" ng-model="taskAddCtrl.note"></textarea>
                         </div>
                     </div>
