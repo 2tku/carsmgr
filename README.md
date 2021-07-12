@@ -1,4 +1,5 @@
 # carsmgr
+
 Demo firebase web + node js.
 
 Requirement:
@@ -6,15 +7,15 @@ Requirement:
 
 0. Install env node.js :
 
-ref: https://github.com/felixrieseberg/npm-windows-upgrade#usage
+    ref: https://github.com/felixrieseberg/npm-windows-upgrade#usage
 
 1. Install express:
 
-$ npm install express --save
+    $ npm install express --save
 
 2. Install deamon:
 
-$ npm install nodemon --save-dev
+    $ npm install nodemon --save-dev
 
 /* -- not used
     You can run 
@@ -24,11 +25,11 @@ $ npm install nodemon --save-dev
 
 3. Install mongodb:
 
-$ npm install mongodb --save
+    $ npm install mongodb --save
 
 4. Install Embedded JavaScript:
 
-$ npm install ejs --save
+    $ npm install ejs --save
 
 Start app:
 -----------
