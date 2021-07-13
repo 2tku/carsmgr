@@ -65,8 +65,8 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
     var headerFont  = { name: 'Arial', size: 11, bold: true};
 
     wsTasks.columns = [
-        { header: ['Ngày',''], 										    key: 'create_date', 	width: 20 , style: {border: cBorder, font: cFont, numFmt: 'dd/mm/yyyy'}},
-        { header: ['Phương tiện',''], 								    key: 'vehicle', 		width: 15 , style: {border: cBorder, font: cFont}},
+        { header: ['Ngày',''], 										    key: 'create_date', 	width: 15 , style: {border: cBorder, font: cFont, numFmt: 'dd/mm/yyyy'}},
+        { header: ['Phương tiện',''], 								    key: 'vehicle', 		width: 20 , style: {border: cBorder, font: cFont}},
         { header: ['Nội dung SC',''], 								    key: 'tast_content', 	width: 40 , style: {border: cBorder, font: cFont}},
         { header: ['Nhân viên','NV1'], 					                key: 'staff0', 			width: 15 , style: {border: cBorder, font: cFont}},
         { header: ['','NV2'], 							                key: 'staff1', 			width: 15 , style: {border: cBorder, font: cFont}},
@@ -79,10 +79,10 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         { header: ['Hệ số',''], 										key: '', 				width: 20 , style: {border: cBorder, font: cFont}},
         { header: ['TG thực tế',''], 								    key: 'task_real_hour', 	width: 20 , style: {border: cBorder, font: cFont/*, numFmt: '0.00'*/}},
         { header: ['TG chờ vật tư',''], 							  key: 'wait_material_hour',width: 20 , style: {border: cBorder, font: cFont}},
-        { header: ['Nguyên nhân - biên pháp khắc phục về sau',''], 	    key: 'problem', 		width: 20 , style: {border: cBorder, font: cFont}},
-        { header: ['Biện pháp xử lý',''], 							    key: 'handling', 		width: 20 , style: {border: cBorder, font: cFont}},
-        { header: ['Chi phí',''], 										key: 'cost', 			width: 30 , style: {border: cBorder, font: cFont, numFmt: '0.00'}},
-        { header: ['Nhiên liệu',''], 									key: 'fuel', 			width: 30 , style: {border: cBorder, font: cFont}},
+        { header: ['Nguyên nhân - biên pháp khắc phục về sau',''], 	    key: 'problem', 		width: 40 , style: {border: cBorder, font: cFont}},
+        { header: ['Biện pháp xử lý',''], 							    key: 'handling', 		width: 40 , style: {border: cBorder, font: cFont}},
+        { header: ['Chi phí',''], 										key: 'cost', 			width: 15 , style: {border: cBorder, font: cFont, numFmt: '0.00'}},
+        { header: ['Nhiên liệu',''], 									key: 'fuel', 			width: 15 , style: {border: cBorder, font: cFont}},
         { header: ['Ghi chú',''], 									    key: 'note', 			width: 60 , style: {border: cBorder, font: cFont}}
     ];
 
