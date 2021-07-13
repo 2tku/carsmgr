@@ -47,10 +47,10 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
     workbook.properties.date1904 = true;
     workbook.views = [{
         x: 0, y: 0, width: 10000, height: 20000,
-        firstSheet: 0, activeTab: 1, visibility: 'visible'
+        firstSheet: 0, activeTab: 0, visibility: 'visible'
     }];
 
-// {
+// { sheet Tasks
     var wsTasks = workbook.addWorksheet('Tasks');
     // create a sheet with the first row and column frozen
     // var sheet = workbook.addWorksheet('My Sheet', {views:[{xSplit: 1, ySplit:1}]});
@@ -74,11 +74,11 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         { header: ['','NV4'], 							                key: 'staff3', 			width: 15 , style: {border: cBorder, font: cFont}},
         { header: ['Thời gian thực hiện', 'Bắt đầu'], 					key: 'begin_time', 		width: 20 , style: {border: cBorder, font: cFont, numFmt: 'dd/mm/yyyy h:mm'}},
         { header: ['', 'Kết thúc'], 									key: 'end_time', 		width: 20 , style: {border: cBorder, font: cFont, numFmt: 'dd/mm/yyyy h:mm'}},
-        { header: ['HSKT(Giờ)',''], 									key: '', 				width: 10 , style: {border: cBorder, font: cFont}},
-        { header: ['NC thực tế',''], 								    key: '', 				width: 10 , style: {border: cBorder, font: cFont}},
-        { header: ['Hệ số',''], 										key: '', 				width: 10 , style: {border: cBorder, font: cFont}},
-        { header: ['TG thực tế',''], 								    key: 'task_real_hour', 	width: 10 , style: {border: cBorder, font: cFont/*, numFmt: '0.00'*/}},
-        { header: ['TG chờ vật tư',''], 							  key: 'wait_material_hour',width: 10 , style: {border: cBorder, font: cFont}},
+        { header: ['HSKT(Giờ)',''], 									key: '', 				width: 20 , style: {border: cBorder, font: cFont}},
+        { header: ['NC thực tế',''], 								    key: '', 				width: 20 , style: {border: cBorder, font: cFont}},
+        { header: ['Hệ số',''], 										key: '', 				width: 20 , style: {border: cBorder, font: cFont}},
+        { header: ['TG thực tế',''], 								    key: 'task_real_hour', 	width: 20 , style: {border: cBorder, font: cFont/*, numFmt: '0.00'*/}},
+        { header: ['TG chờ vật tư',''], 							  key: 'wait_material_hour',width: 20 , style: {border: cBorder, font: cFont}},
         { header: ['Nguyên nhân - biên pháp khắc phục về sau',''], 	    key: 'problem', 		width: 20 , style: {border: cBorder, font: cFont}},
         { header: ['Biện pháp xử lý',''], 							    key: 'handling', 		width: 20 , style: {border: cBorder, font: cFont}},
         { header: ['Chi phí',''], 										key: 'cost', 			width: 30 , style: {border: cBorder, font: cFont, numFmt: '0.00'}},
@@ -108,7 +108,7 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         wsTasks.mergeCells(colMerge[i] + '1:' + colMerge[i] + '2');
     }
 //}
-//{
+//{ sheet Users
     var wsUsers = workbook.addWorksheet('Users');
     
     wsUsers.views = [
@@ -129,6 +129,29 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         wsUsers.getRow(i).font = headerFont;
 
         wsUsers.getRow(i).eachCell(function(cell, rowNumber) {
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+        });
+    }
+//}
+
+//{ Sheet material
+    var wsMaterial = workbook.addWorksheet('Material');
+    
+    wsMaterial.views = [
+        {state: 'frozen', xSplit: 0, ySplit: 1}
+    ];
+
+    wsMaterial.columns = [
+        { header: ['Ngày'],         key: 'create_date', 	width: 20 , style: {border: cBorder, font: cFont, numFmt: 'dd/mm/yyyy'}},
+        { header: ['Phương tiện'],  key: 'vehicle', 		width: 15 , style: {border: cBorder, font: cFont}},
+        { header: ['Vật tư'],       key: 'material', 	    width: 40 , style: {border: cBorder, font: cFont}},
+    ];
+    
+    // format Header
+    for (var i = 1; i <= 1; i++) {
+        wsMaterial.getRow(i).font = headerFont;
+
+        wsMaterial.getRow(i).eachCell(function(cell, rowNumber) {
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
         });
     }
@@ -195,8 +218,9 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
         // push in worksheet
         var staffs = [];
         var tasksNew = [];
+        var arrMaterial = [];
 
-        for (i = 0; i< tasks.length; i++) {
+        for (i=0; i<tasks.length; i++) {
             task = tasks[i];
             taskNew = {
                 create_date         : task.create_date == null ? null: moment(task.create_date).add(7, 'hours').toDate(), //task.create_date,
@@ -220,8 +244,7 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
                 taskNew.handling = task.problems[0].handling
             }
 
-            // console.log(task);
-            for (j = 0; j<task.assign_staffs.length;j++){
+            for (j=0; j<task.assign_staffs.length; j++){
                 staff = task.assign_staffs[j];
                 var staffTask = {
                     create_date : task.create_date == null? null: moment(task.create_date).add(7, 'hours').toDate(), //task.create_date,
@@ -236,11 +259,18 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
                 taskNew['staff' + j] = staff.staff;
             }
 
+            for (j=0; j < task.material.length; j++) {
+                var materialInTask = {
+                    create_date : task.create_date == null? null: moment(task.create_date).add(7, 'hours').toDate(), //task.create_date,
+                    vehicle     : task.vehicle,
+                    material    : task.material[j].name,
+                }
+                arrMaterial.push(materialInTask);
+            }
+
             tasksNew.push(taskNew);
         }
-        //console.log(staffs);
         // sortByAttribute(staffs, 'create_date', 'staff', 'begin_time', 'vehicle');
-        //console.log(staffs);
         
         /*staffs.sort(function(a, b){
             var x = a.type.toLowerCase();
@@ -249,7 +279,8 @@ router.get('/', /*isLoggedIn,*/ function(req, res, next) {
             if (x > y) {return 1;}
             return 0;
         });*/
-        
+
+        wsMaterial.addRows(arrMaterial);
         wsUsers.addRows(staffs);
         wsTasks.addRows(tasksNew);
 

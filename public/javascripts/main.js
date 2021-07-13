@@ -49,7 +49,6 @@ angular.module('AppModule',
 
     this.init = function(strAuthenMsg) {
         var info = JSON.parse(strAuthenMsg);
-        //console.log(info);
 
         if (info.success && info.success != '') {
             this.isError = false;
@@ -107,7 +106,6 @@ function ($scope, $location, $http) {
 
     this.init = function(strAuthenMsg) {
         var info = JSON.parse(strAuthenMsg);
-        //console.log(info);
 
         if (info.success && info.success != '') {
             this.isError = false;
@@ -173,9 +171,6 @@ function ($scope, $location, $http) {
         this.tasks = Tasks.query(this.searchCondition);
 
         this.checkAll = function () {
-            // console.log("this.isCheckAll");
-            // console.log(this.isCheckAll);
-
             for(var i = 0 ;i < this.tasks.length; i ++) {
                 this.editing[i] = this.isCheckAll;
             }
@@ -186,8 +181,6 @@ function ($scope, $location, $http) {
         }
 
         /*this.checkRemove = function(index) {
-            console.log('this.editing[index]');
-            console.log(this.editing[index]);
             this.editing[index] = false;
         }*/
 
@@ -205,9 +198,6 @@ function ($scope, $location, $http) {
         }
 
         this.searchTasks = function() {
-            // console.log(this.searchCondition.createDateFrom);
-            // console.log(this.searchCondition.createDateTo);
-
             /*if ((this.searchCondition.vehicle != null && this.searchCondition.vehicle != '') 
                 || (this.searchCondition.completeDate!=null)
                 || (this.searchCondition.createDateFrom != null)
@@ -284,6 +274,22 @@ function ($scope, $location, $http) {
         this.deleteAssignStaff = function(index) {
             this.editTask.assign_staffs.splice(index, 1)
         }
+
+        this.newMaterial = function(chip) {
+			return {
+				name: chip
+			}
+		}
+
+        // this.addMaterial = function(chip, index){
+        //     if (this.editTask.material.length <= 5) {
+        //         this.editTask.material.push({name: chip});
+        //     }
+        // }
+
+        // this.removeMaterial = function(chip, index, event) {
+        //     this.editTask.material.splice(index, 1)
+        // }
 
         this.save = function() {
             if(!this.editTask) {
@@ -375,6 +381,15 @@ function ($scope, $location, $http) {
                 this.donePercent = null;
             }
 
+            var objMaterial = [];
+
+            for(var i = this.material.length - 1 ;i >=0 ; i--) {
+                // check have any value
+                if(this.material[i]){
+                    objMaterial.push({name: this.material[i]});
+                }
+            }
+
             var newTask = new Tasks({ 
                 create_date         : this.createDate,
                 vehicle             : this.vehicle,
@@ -390,10 +405,9 @@ function ($scope, $location, $http) {
                 done_percent        : this.donePercent,
                 fuel                : this.fuel,
                 cost                : this.cost,
-                material            : this.material
+                material            : objMaterial
             });
 
-            //console.log(newTask);
             newTask.$save(function(){
                 Tasks.query().push(newTask);
                 $location.url('/');
@@ -405,6 +419,15 @@ function ($scope, $location, $http) {
                 this.isError = true;
                 this.errorMsg = 'Phương tiện hoặc ngày tạo không được trống';
                 return;
+            }
+
+            var objMaterial = [];
+
+            for(var i = this.material.length - 1 ;i >=0 ; i--) {
+                // check have any value
+                if(this.material[i]){
+                    objMaterial.push({name: this.material[i]});
+                }
             }
 
             var newTask = new Tasks({ 
@@ -420,7 +443,7 @@ function ($scope, $location, $http) {
                 note                : this.note,
                 fuel                : this.fuel,
                 cost                : this.cost,
-                material            : this.material
+                material            : objMaterial
             });
 
             newTask.$save(function(){

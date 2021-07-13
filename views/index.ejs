@@ -407,7 +407,13 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="action">Vật tư</label>
                         <div class="col-sm-4">
-                            <input id="iMaterial" type="number" class="form-control" ng-model="taskEditCtrl.editTask.material">
+                            <md-chips ng-model="taskEditCtrl.editTask.material" placeholder="Thêm vật tư" md-max-chips="5" delete-button-label="Xóa" 
+                                    md-transform-chip = "taskEditCtrl.newMaterial($chip)">
+
+                                <md-chip-template>
+                                    <span>{{$chip.name}}</span>
+                                </md-chip-template>
+                            </md-chips>
                         </div>
                         <label class="control-label col-sm-2" for="action">Chi phí</label>
                         <div class="col-sm-4">
@@ -639,7 +645,9 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="action">Vật tư</label>
                         <div class="col-sm-4">
-                            <input id="iMaterial" type="number" class="form-control" ng-model="taskAddCtrl.material">
+                            <!-- <input id="iMaterial" type="number" class="form-control" ng-model="taskAddCtrl.material"> -->
+                            <md-chips ng-model="taskAddCtrl.material" placeholder="Thêm vật tư" md-max-chips="5" delete-button-label="Xóa">
+                            </md-chips>
                         </div>
                         <label class="control-label col-sm-2" for="action">Chi phí</label>
                         <div class="col-sm-4">
